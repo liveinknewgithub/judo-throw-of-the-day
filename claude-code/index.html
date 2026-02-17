@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Throw of the Day — Judo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0b0b10;
+            --card: #13131c;
+            --card-border: #1e1e2a;
+            --gold: #c9a854;
+            --gold-dim: #8b7535;
+            --gold-glow: rgba(201, 168, 84, 0.12);
+            --vermillion: #c23c2c;
+            --cream: #ede8df;
+            --cream-dim: #7a7670;
+            --teal: #3a9a8a;
+            --section-line: rgba(201, 168, 84, 0.15);
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--cream);
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Grain texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        /* Subtle red sun in background */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -20vh;
+            right: -10vw;
+            width: 60vw;
+            height: 60vw;
+            max-width: 500px;
+            max-height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(194, 60, 44, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ---- HEADER ---- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem 0.75rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .enso {
+            width: 28px;
+            height: 28px;
+            opacity: 0.7;
+        }
+
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream);
+            opacity: 0.6;
+        }
+
+        .day-counter {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 400;
+            font-size: 0.72rem;
+            color: var(--gold);
+            opacity: 0.7;
+            letter-spacing: 0.05em;
+        }
+
+        /* ---- MAIN CARD ---- */
+        .card-wrapper {
+            position: relative;
+            z-index: 1;
+            padding: 0 1rem;
+            overflow: hidden;
+        }
+
+        .throw-card {
+            max-width: 520px;
+            margin: 0 auto;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .throw-card.exit-left {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        .throw-card.exit-right {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        .throw-card.enter {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        /* ---- SVG ILLUSTRATION ---- */
+        .illustration-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 0 0.5rem;
+            position: relative;
+        }
+
+        .illustration-wrap::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--gold-glow);
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        .throw-svg {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ---- THROW INFO ---- */
+        .throw-info {
+            text-align: center;
+            padding: 0.5rem 0 1.25rem;
+        }
+
+        .throw-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-style: italic;
+            font-size: 2.4rem;
+            line-height: 1.1;
+            color: var(--cream);
+            letter-spacing: 0.01em;
+            margin-bottom: 0.15rem;
+        }
+
+        .throw-kanji {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--gold);
+            opacity: 0.6;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.15em;
+        }
+
+        .throw-english {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            font-size: 0.95rem;
+            color: var(--cream-dim);
+            margin-bottom: 0.75rem;
+        }
+
+        .category-pill {
+            display: inline-block;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.9rem;
+            border-radius: 100px;
+            border: 1px solid var(--card-border);
+            background: var(--card);
+        }
+
+        .category-pill[data-cat="te"] { color: #e8a44a; border-color: rgba(232,164,74,0.25); }
+        .category-pill[data-cat="koshi"] { color: #5ab88a; border-color: rgba(90,184,138,0.25); }
+        .category-pill[data-cat="ashi"] { color: #5a9ab8; border-color: rgba(90,154,184,0.25); }
+        .category-pill[data-cat="sutemi"] { color: #b85a8a; border-color: rgba(184,90,138,0.25); }
+
+        /* ---- SECTIONS ---- */
+        .section {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-label {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.6rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.55;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--section-line);
+        }
+
+        /* ---- TIPS ---- */
+        .tips-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+            font-size: 0.88rem;
+            font-weight: 300;
+            line-height: 1.5;
+            color: rgba(237, 232, 223, 0.82);
+        }
+
+        .tip-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--gold);
+            opacity: 0.5;
+            min-width: 1.1rem;
+            text-align: right;
+            padding-top: 0.1rem;
+        }
+
+        /* ---- COMBOS ---- */
+        .combo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .combo-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.8rem;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--cream);
+            transition: border-color 0.2s;
+        }
+
+        .combo-item:hover {
+            border-color: var(--gold-dim);
+        }
+
+        .combo-arrow {
+            color: var(--gold);
+            font-size: 0.75rem;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .combo-throw {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .combo-note {
+            font-size: 0.72rem;
+            color: var(--cream-dim);
+            font-weight: 300;
+            margin-left: auto;
+            text-align: right;
+            max-width: 40%;
+        }
+
+        /* ---- NAV ---- */
+        .nav-bar {
+            position: sticky;
+            bottom: 0;
+            padding: 1rem 1.5rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            background: linear-gradient(to top, var(--bg) 60%, transparent);
+            z-index: 10;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--cream);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.92);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .today-btn {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: transparent;
+            border: 1px solid var(--gold-dim);
+            color: var(--gold);
+            padding: 0.55rem 1.2rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .today-btn:hover {
+            background: var(--gold);
+            color: var(--bg);
+        }
+
+        .today-btn:active {
+            transform: scale(0.95);
+        }
+
+        .today-btn.is-today {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* ---- DOTS ---- */
+        .dots {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--cream-dim);
+            opacity: 0.2;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--gold);
+            opacity: 0.9;
+            width: 7px;
+            height: 7px;
+        }
+
+        /* ---- ANIMATIONS ---- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .anim-in {
+            animation: fadeUp 0.45s ease forwards;
+        }
+
+        .stagger-1 { animation-delay: 0.05s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.12s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.28s; opacity: 0; }
+        .stagger-5 { animation-delay: 0.36s; opacity: 0; }
+
+        /* ---- RESPONSIVE ---- */
+        @media (min-width: 640px) {
+            .throw-name { font-size: 3rem; }
+            .throw-svg { width: 240px; height: 240px; }
+            .section { padding: 0 2rem; }
+        }
+
+        @media (min-width: 768px) {
+            body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+            .header { max-width: 560px; width: 100%; }
+        }
+
+        /* Hide scrollbar but allow scroll */
+        body::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-brand">
+            <svg class="enso" viewBox="0 0 40 40" fill="none">
+                <path d="M20 3C10.6 3 3 10.6 3 20s7.6 17 17 17 17-7.6 17-17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.45"/>
+            </svg>
+            <span class="header-title">Throw of the Day</span>
+        </div>
+        <span class="day-counter" id="dayCounter"></span>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="card-wrapper">
+            <div class="throw-card" id="throwCard"></div>
+        </div>
+        <div class="section" id="tipsSection"></div>
+        <div class="section" id="combosSection"></div>
+        <div style="height: 5rem;"></div>
+    </main>
+
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous throw">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="dots" id="dots"></div>
+        <button class="today-btn" id="todayBtn">Today</button>
+        <button class="nav-btn" id="nextBtn" aria-label="Next throw">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+    </div>
+
+<script>
+// =========================================================
+// THROW DATA
+// =========================================================
+// Pose format: [headX,headY, neckX,neckY, handLX,handLY, handRX,handRY, hipX,hipY, footLX,footLY, footRX,footRY]
+
+const TORI = '#c9a854';
+const UKE = '#ede8df';
+
+const throws = [
+{
+    name:"Seoi-nage", kanji:"背負投", english:"Shoulder Throw",
+    cat:"te", catName:"Te-waza · Hand Technique",
+    tori:[92,58, 94,68, 68,62, 118,55, 96,108, 76,178, 114,178],
+    uke:[58,30, 65,42, 45,55, 82,50, 78,52, 108,28, 98,35],
+    arc:"M115,48 Q85,5 45,38",
+    tips:[
+        "Grip the sleeve and lapel firmly — pull the sleeve hand forward as you rotate in",
+        "Turn your back completely into uke; your hips must be lower than their center of gravity",
+        "Straighten your legs explosively to load uke onto your back",
+        "Drive forward and down through the throw — don't stand up tall"
+    ],
+    combos:[
+        {a:"Ko-uchi-gari", b:"Seoi-nage", note:"Attack inside, turn in on resistance"},
+        {a:"O-uchi-gari", b:"Seoi-nage", note:"Big inside attack sets up the turn"},
+        {a:"Seoi-nage", b:"Ko-uchi-gari", note:"Feint turn, hook when they backstep"}
+    ]
+},
+{
+    name:"Ippon Seoi-nage", kanji:"一本背負投", english:"One-Arm Shoulder Throw",
+    cat:"te", catName:"Te-waza · Hand Technique",
+    tori:[90,60, 93,70, 72,58, 112,62, 96,110, 78,178, 112,178],
+    uke:[60,28, 68,40, 48,52, 85,48, 80,50, 105,25, 95,32],
+    arc:"M118,50 Q82,2 42,40",
+    tips:[
+        "Release the lapel and thread your arm deep under uke's armpit",
+        "Lock uke's arm tight to your body — keep your elbow clamped down",
+        "Drop your hips below uke's belt line on entry",
+        "Explode upward through the legs while pulling uke's sleeve forward and down"
+    ],
+    combos:[
+        {a:"Ko-uchi-gari", b:"Ippon seoi-nage", note:"Hook ankle, turn in when they pull back"},
+        {a:"Ippon seoi-nage", b:"Tai-otoshi", note:"Switch if they block your turn"},
+        {a:"O-uchi-gari", b:"Ippon seoi-nage", note:"Inside reap creates forward entry"}
+    ]
+},
+{
+    name:"Tai-otoshi", kanji:"体落", english:"Body Drop",
+    cat:"te", catName:"Te-waza · Hand Technique",
+    tori:[85,52, 88,64, 60,48, 125,50, 92,100, 72,178, 132,158],
+    uke:[130,38, 128,52, 110,48, 142,58, 125,78, 140,125, 120,118],
+    arc:"M145,50 Q120,10 70,42",
+    tips:[
+        "Step across uke's front with your lead foot, placing yourself as a barrier",
+        "Extend your far leg across uke's shin — it blocks, not trips",
+        "The throw comes from the pull: rotate your body and drive both hands down",
+        "Keep your weight low and your back straight as you pull through"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"Tai-otoshi", note:"Reap inside, switch when they resist"},
+        {a:"Tai-otoshi", b:"O-uchi-gari", note:"If they step over your leg"},
+        {a:"Ko-soto-gari", b:"Tai-otoshi", note:"Outside hook opens the angle"}
+    ]
+},
+{
+    name:"Kata-guruma", kanji:"肩車", english:"Shoulder Wheel",
+    cat:"te", catName:"Te-waza · Hand Technique",
+    tori:[95,78, 95,88, 68,105, 125,82, 95,125, 78,178, 112,178],
+    uke:[55,68, 68,72, 42,82, 88,65, 108,76, 138,62, 128,68],
+    arc:"M140,58 Q105,25 42,75",
+    tips:[
+        "Drop extremely low — your shoulders must be below uke's hips",
+        "Thread your head and arm between uke's legs from the front",
+        "Load uke evenly across both shoulders before standing",
+        "Modern competition often uses a drop version — commit to the level change"
+    ],
+    combos:[
+        {a:"Ko-uchi-gari", b:"Kata-guruma", note:"Attack leg, dive under on resistance"},
+        {a:"Seoi-nage", b:"Kata-guruma", note:"If they sprawl, transition under"},
+        {a:"Kata-guruma", b:"Ko-uchi-gari", note:"Feint low, hook on their reaction"}
+    ]
+},
+{
+    name:"O-goshi", kanji:"大腰", english:"Major Hip Throw",
+    cat:"koshi", catName:"Koshi-waza · Hip Technique",
+    tori:[85,55, 88,66, 65,58, 118,72, 92,105, 78,178, 108,178],
+    uke:[62,30, 70,42, 50,55, 90,48, 82,55, 108,30, 98,38],
+    arc:"M112,42 Q80,2 45,40",
+    tips:[
+        "Wrap your arm tightly around uke's waist — pull them onto your hip",
+        "Turn your back fully to uke, making deep hip-to-hip contact",
+        "Your hips must be positioned below uke's center of gravity",
+        "Straighten legs and rotate simultaneously to launch uke over your hip"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"O-goshi", note:"Inside reap creates the opening"},
+        {a:"O-goshi", b:"O-uchi-gari", note:"If they resist the hip, reap inside"},
+        {a:"Ko-uchi-gari", b:"O-goshi", note:"Hook ankle, turn in to the hip"}
+    ]
+},
+{
+    name:"Uchi-mata", kanji:"内股", english:"Inner Thigh Throw",
+    cat:"koshi", catName:"Koshi-waza · Hip Technique",
+    tori:[82,50, 85,62, 58,48, 112,50, 88,100, 72,178, 128,65],
+    uke:[122,32, 120,46, 108,48, 138,52, 118,68, 132,108, 112,98],
+    arc:"M140,48 Q115,5 55,42",
+    tips:[
+        "Enter on a diagonal, stepping deep between uke's feet",
+        "Sweep your leg upward between uke's thighs from behind",
+        "Drive your chest forward and down while your leg sweeps high",
+        "Time the sweep as uke's weight shifts forward onto their lead foot"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"Uchi-mata", note:"Classic: inside reap → inner thigh"},
+        {a:"Uchi-mata", b:"O-uchi-gari", note:"When they hop back from the sweep"},
+        {a:"Ko-uchi-gari", b:"Uchi-mata", note:"Small hook sets up the big sweep"}
+    ]
+},
+{
+    name:"Harai-goshi", kanji:"払腰", english:"Sweeping Hip Throw",
+    cat:"koshi", catName:"Koshi-waza · Hip Technique",
+    tori:[85,52, 88,64, 60,50, 115,55, 90,102, 74,178, 132,98],
+    uke:[60,28, 68,40, 48,52, 85,45, 80,55, 105,30, 95,38],
+    arc:"M110,42 Q78,2 42,40",
+    tips:[
+        "Turn in deep on your support leg — get your hip fully across uke's front",
+        "Sweep your leg backward across both of uke's legs in a wide arc",
+        "The sweep and hand pull happen simultaneously for maximum power",
+        "Keep uke loaded tight on your hip throughout the entire sweep"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"Harai-goshi", note:"Inside reap opens the hip entry"},
+        {a:"Harai-goshi", b:"O-uchi-gari", note:"If they block the sweep, reap inside"},
+        {a:"Sasae", b:"Harai-goshi", note:"Ankle block draws them into the hip"}
+    ]
+},
+{
+    name:"Koshi-guruma", kanji:"腰車", english:"Hip Wheel",
+    cat:"koshi", catName:"Koshi-waza · Hip Technique",
+    tori:[85,55, 88,66, 65,56, 122,48, 92,105, 78,178, 108,178],
+    uke:[120,42, 115,55, 102,62, 132,55, 110,72, 128,110, 118,102],
+    arc:"M135,48 Q100,8 58,48",
+    tips:[
+        "Wrap your arm around uke's neck or head instead of their waist",
+        "This higher grip gives a stronger lever for the wheeling action",
+        "Turn in deeply with your hip low and positioned across uke's center",
+        "Rotate uke over your hip using the head grip as the control point"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"Koshi-guruma", note:"Inside reap into the head-wrap entry"},
+        {a:"Koshi-guruma", b:"O-uchi-gari", note:"If the wheel stalls, reap inside"},
+        {a:"Ko-uchi-gari", b:"Koshi-guruma", note:"Hook ankle, turn in deep"}
+    ]
+},
+{
+    name:"Tsuri-goshi", kanji:"釣腰", english:"Lifting Hip Throw",
+    cat:"koshi", catName:"Koshi-waza · Hip Technique",
+    tori:[85,52, 88,64, 62,55, 118,68, 90,102, 76,178, 108,178],
+    uke:[122,35, 118,48, 105,55, 135,48, 115,65, 130,100, 120,95],
+    arc:"M138,42 Q108,2 55,48",
+    tips:[
+        "Grip uke's belt with your wrapping arm for maximum lifting control",
+        "The belt grip lets you directly manipulate uke's hip position",
+        "Turn in deep, loading uke onto your hip with the belt pull",
+        "Lift with the belt hand and rotate simultaneously for explosive power"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"Tsuri-goshi", note:"Inside reap creates the belt opportunity"},
+        {a:"Tsuri-goshi", b:"O-uchi-gari", note:"If they resist the lift, reap inside"},
+        {a:"Ko-uchi-gari", b:"Tsuri-goshi", note:"Hook, then turn in to the belt grip"}
+    ]
+},
+{
+    name:"Sode-tsurikomi-goshi", kanji:"袖釣込腰", english:"Sleeve Lifting Pulling Hip",
+    cat:"koshi", catName:"Koshi-waza · Hip Technique",
+    tori:[88,56, 90,68, 62,58, 118,52, 94,108, 78,178, 110,178],
+    uke:[56,28, 64,40, 42,52, 82,44, 76,50, 104,26, 94,33],
+    arc:"M112,42 Q78,0 38,42",
+    tips:[
+        "Grip both sleeves — no lapel grip needed for this throw",
+        "Turn in while lifting one sleeve high and pulling the other across your body",
+        "Your elbow drives under uke's armpit, creating the lifting action",
+        "Drop hips very low and rotate uke over your back using sleeve control"
+    ],
+    combos:[
+        {a:"Ko-uchi-gari", b:"Sode-tsurikomi-goshi", note:"Ankle hook opens sleeve entry"},
+        {a:"Sode-tsurikomi-goshi", b:"Ko-uchi-gari", note:"Feint turn, hook on backstep"},
+        {a:"O-uchi-gari", b:"Sode-tsurikomi-goshi", note:"Big reap sets up the sleeve throw"}
+    ]
+},
+{
+    name:"O-soto-gari", kanji:"大外刈", english:"Major Outer Reap",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[78,48, 82,60, 58,48, 112,42, 88,98, 74,178, 130,85],
+    uke:[125,58, 122,68, 110,75, 140,62, 120,100, 128,168, 135,128],
+    arc:"M68,42 Q100,18 142,55",
+    tips:[
+        "Step past uke's lead foot with your support foot — get chest to chest",
+        "Drive uke's weight onto their back heel with strong upper body pressure",
+        "Reap your leg behind uke's leg in a powerful sweeping motion",
+        "Commit fully: drive forward and down as you reap — half-measures fail"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"O-soto-gari", note:"Classic inside-outside combination"},
+        {a:"O-soto-gari", b:"O-uchi-gari", note:"If they step out, switch inside"},
+        {a:"Ko-uchi-gari", b:"O-soto-gari", note:"Small hook opens the big reap"}
+    ]
+},
+{
+    name:"O-uchi-gari", kanji:"大内刈", english:"Major Inner Reap",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[78,50, 82,62, 60,50, 115,45, 88,100, 74,178, 120,138],
+    uke:[122,55, 120,66, 108,72, 138,58, 118,98, 115,158, 132,172],
+    arc:"M68,45 Q100,22 140,52",
+    tips:[
+        "Step to the outside of uke's lead foot to create the reaping angle",
+        "Reap uke's lead leg from the inside, sweeping it toward the outside",
+        "Push uke backward with your upper body simultaneously with the reap",
+        "Keep your head up and drive through — don't look at the ground"
+    ],
+    combos:[
+        {a:"O-uchi-gari", b:"Seoi-nage", note:"When they resist backward, turn in"},
+        {a:"O-uchi-gari", b:"Tai-otoshi", note:"Reap sets up the forward drop"},
+        {a:"O-uchi-gari", b:"O-soto-gari", note:"Inside-outside is deadly"}
+    ]
+},
+{
+    name:"Ko-uchi-gari", kanji:"小内刈", english:"Minor Inner Reap",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[80,48, 84,60, 62,50, 118,42, 88,98, 76,178, 118,168],
+    uke:[124,50, 122,62, 110,68, 140,55, 120,95, 118,165, 134,172],
+    arc:"M72,42 Q100,20 142,48",
+    tips:[
+        "Target the heel of uke's supporting foot with a small circular hook",
+        "Use your foot to hook and sweep their heel forward and up",
+        "Simultaneously push uke's upper body in the direction of the reap",
+        "Works best when uke's weight is loaded on the foot you're attacking"
+    ],
+    combos:[
+        {a:"Ko-uchi-gari", b:"Ippon seoi-nage", note:"Most popular competition combo"},
+        {a:"Ko-uchi-gari", b:"Uchi-mata", note:"Small hook sets up big sweep"},
+        {a:"Ko-uchi-gari", b:"O-soto-gari", note:"Inside-outside switchup"}
+    ]
+},
+{
+    name:"Ko-soto-gari", kanji:"小外刈", english:"Minor Outer Reap",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[78,48, 82,60, 60,48, 115,42, 86,98, 74,178, 132,168],
+    uke:[128,52, 125,64, 112,70, 142,58, 122,96, 132,170, 118,172],
+    arc:"M68,42 Q100,18 145,48",
+    tips:[
+        "Hook behind uke's heel from the outside with the sole of your foot",
+        "Pull uke's upper body forward and to the side as you hook",
+        "The reap targets the Achilles area — small and precise, not a big sweep",
+        "Works best when uke steps forward or shifts weight to their front foot"
+    ],
+    combos:[
+        {a:"Ko-soto-gari", b:"Tai-otoshi", note:"Outside hook opens body drop angle"},
+        {a:"Ko-soto-gari", b:"Seoi-nage", note:"Hook → turn in on resistance"},
+        {a:"O-uchi-gari", b:"Ko-soto-gari", note:"Inside then outside, same leg"}
+    ]
+},
+{
+    name:"De-ashi-barai", kanji:"出足払", english:"Forward Foot Sweep",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[80,48, 84,60, 62,48, 118,40, 88,98, 76,178, 124,175],
+    uke:[132,42, 130,55, 118,62, 148,48, 128,88, 128,168, 142,170],
+    arc:"M70,42 Q105,15 150,40",
+    tips:[
+        "Time the sweep as uke steps forward — catch their foot mid-stride",
+        "Sweep the sole of their foot just as it lifts off the mat",
+        "Your hands direct the fall: pull in the direction of the sweep",
+        "Timing is everything — sweep at the moment of zero weight on that foot"
+    ],
+    combos:[
+        {a:"De-ashi-barai", b:"Seoi-nage", note:"If they hop over, turn in immediately"},
+        {a:"O-uchi-gari", b:"De-ashi-barai", note:"Drive them into a step, then sweep"},
+        {a:"De-ashi-barai", b:"De-ashi-barai", note:"Catch the rhythm of their steps"}
+    ]
+},
+{
+    name:"Okuri-ashi-barai", kanji:"送足払", english:"Sliding Foot Sweep",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[75,48, 78,60, 55,48, 110,40, 82,98, 70,178, 120,178],
+    uke:[132,38, 130,52, 118,58, 148,44, 128,85, 122,152, 138,158],
+    arc:"M62,42 Q100,10 150,35",
+    tips:[
+        "Create lateral movement first — push-pull uke sideways with your grips",
+        "Sweep as uke's feet come together during the side step",
+        "Your sweep catches the trailing foot as it slides toward the lead foot",
+        "Sweep in the direction uke is already moving for maximum effect"
+    ],
+    combos:[
+        {a:"Circular movement", b:"Okuri-ashi-barai", note:"Create motion, then sweep"},
+        {a:"Okuri-ashi-barai", b:"Tai-otoshi", note:"If they resist, switch to drop"},
+        {a:"Okuri-ashi-barai", b:"Uchi-mata", note:"Lateral sweep opens the thigh"}
+    ]
+},
+{
+    name:"Sasae-tsurikomi-ashi", kanji:"支釣込足", english:"Propping Drawing Ankle",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[80,48, 84,60, 58,40, 118,35, 88,100, 76,178, 122,152],
+    uke:[130,48, 128,60, 116,66, 144,52, 126,92, 124,148, 138,168],
+    arc:"M65,35 Q100,5 148,42",
+    tips:[
+        "Block uke's advancing ankle with the sole of your foot — firm contact",
+        "Simultaneously lift and pull with both hands (the tsurikomi action)",
+        "Your foot stops forward momentum; your hands wheel uke over the block",
+        "Works best when uke moves forward naturally — don't force the entry"
+    ],
+    combos:[
+        {a:"Sasae", b:"Uchi-mata", note:"Classic: block ankle → sweep thigh"},
+        {a:"Sasae", b:"Harai-goshi", note:"Ankle block into sweeping hip"},
+        {a:"Sasae", b:"Seoi-nage", note:"If they pull back, turn in"}
+    ]
+},
+{
+    name:"Hiza-guruma", kanji:"膝車", english:"Knee Wheel",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[78,48, 82,60, 56,38, 115,35, 86,100, 74,178, 120,128],
+    uke:[132,42, 130,56, 118,62, 146,48, 128,90, 122,128, 140,168],
+    arc:"M62,32 Q105,2 150,38",
+    tips:[
+        "Place the sole of your foot against uke's knee from the outside",
+        "Pull and lift with your hands to wheel uke over the blocked knee",
+        "Your leg is a prop — the throw's power comes entirely from your hands",
+        "Step off the line to create a circular wheeling action"
+    ],
+    combos:[
+        {a:"Hiza-guruma", b:"Tai-otoshi", note:"High block → low block transition"},
+        {a:"Sasae", b:"Hiza-guruma", note:"Change blocking height: ankle → knee"},
+        {a:"O-uchi-gari", b:"Hiza-guruma", note:"Inside reap opens the wheel"}
+    ]
+},
+{
+    name:"Harai-tsurikomi-ashi", kanji:"払釣込足", english:"Lifting Pulling Foot Sweep",
+    cat:"ashi", catName:"Ashi-waza · Foot/Leg Technique",
+    tori:[80,48, 84,60, 58,40, 118,36, 88,100, 76,178, 126,172],
+    uke:[132,42, 130,56, 118,62, 146,48, 128,88, 130,162, 140,168],
+    arc:"M65,35 Q105,5 148,38",
+    tips:[
+        "Combine a foot sweep with a powerful lift-pull hand action",
+        "Sweep uke's lead foot while lifting them up and forward with your grips",
+        "The sweep and the lift-pull are simultaneous and in the same direction",
+        "Enter at a slight angle to break uke's balance diagonally forward"
+    ],
+    combos:[
+        {a:"Harai-tsurikomi-ashi", b:"Uchi-mata", note:"Foot sweep → thigh sweep"},
+        {a:"O-uchi-gari", b:"Harai-tsurikomi-ashi", note:"Inside reap sets up the sweep"},
+        {a:"Harai-tsurikomi-ashi", b:"Seoi-nage", note:"Sweep → turn in on resistance"}
+    ]
+},
+{
+    name:"Tomoe-nage", kanji:"巴投", english:"Circle Throw",
+    cat:"sutemi", catName:"Sutemi-waza · Sacrifice Technique",
+    tori:[82,142, 86,132, 65,112, 115,110, 90,152, 78,178, 112,85],
+    uke:[118,50, 115,62, 100,70, 132,58, 112,82, 128,118, 120,110],
+    arc:"M130,52 Q100,10 72,48",
+    tips:[
+        "Fall directly backward, placing your foot firmly on uke's stomach or hip",
+        "Pull uke forward and over you as you roll onto your back",
+        "The foot on their body is the fulcrum — push up as you pull hands down",
+        "Commit fully to the sacrifice — half-hearted attempts give up position"
+    ],
+    combos:[
+        {a:"Failed seoi-nage", b:"Tomoe-nage", note:"Drop under when they block"},
+        {a:"Ko-uchi-gari", b:"Tomoe-nage", note:"Hook → sacrifice when they resist"},
+        {a:"Tomoe-nage", b:"Juji-gatame", note:"Transition to armbar on the ground"}
+    ]
+},
+{
+    name:"Sumi-gaeshi", kanji:"隅返", english:"Corner Reversal",
+    cat:"sutemi", catName:"Sutemi-waza · Sacrifice Technique",
+    tori:[80,135, 84,125, 62,108, 112,105, 88,148, 74,178, 114,102],
+    uke:[118,52, 115,65, 100,72, 132,58, 112,85, 126,122, 120,115],
+    arc:"M134,52 Q105,12 68,55",
+    tips:[
+        "Fall to your back while hooking uke's inner thigh with your instep",
+        "Pull uke forward and to the side as you sacrifice your position",
+        "The foot hook and body roll combine to flip uke over you",
+        "Works well against opponents with strong forward-leaning posture"
+    ],
+    combos:[
+        {a:"Uke's forward throw", b:"Sumi-gaeshi", note:"Counter their momentum"},
+        {a:"Ko-uchi-gari", b:"Sumi-gaeshi", note:"Hook → sacrifice underneath"},
+        {a:"Sumi-gaeshi", b:"Newaza", note:"Transition directly to ground work"}
+    ]
+},
+{
+    name:"Tani-otoshi", kanji:"谷落", english:"Valley Drop",
+    cat:"sutemi", catName:"Sutemi-waza · Sacrifice Technique",
+    tori:[72,118, 76,110, 55,92, 110,88, 80,142, 65,178, 130,162],
+    uke:[122,58, 120,70, 108,78, 138,62, 118,98, 130,155, 115,148],
+    arc:"M140,58 Q112,28 62,68",
+    tips:[
+        "Drop to the mat beside and slightly behind uke",
+        "Your leg sweeps across the back of both of uke's legs as you fall",
+        "Pull uke sideways and backward as you drop",
+        "Excellent as a counter when uke attempts any forward throw"
+    ],
+    combos:[
+        {a:"Counter uchi-mata", b:"Tani-otoshi", note:"Block their hip, drop beside"},
+        {a:"Counter harai-goshi", b:"Tani-otoshi", note:"Block the sweep, drop and pull"},
+        {a:"Failed forward throw", b:"Tani-otoshi", note:"Transition to side sacrifice"}
+    ]
+},
+{
+    name:"Ura-nage", kanji:"裏投", english:"Rear Throw",
+    cat:"sutemi", catName:"Sutemi-waza · Sacrifice Technique",
+    tori:[85,62, 88,72, 112,68, 114,66, 82,108, 70,178, 98,178],
+    uke:[120,38, 118,52, 105,58, 135,45, 115,72, 128,108, 120,102],
+    arc:"M135,38 Q100,8 75,42",
+    tips:[
+        "Wrap both arms around uke's waist from a chest-to-chest position",
+        "Arch backward explosively, lifting uke off the ground",
+        "Bridge and rotate to drive uke onto the mat behind you",
+        "Requires explosive hip and back strength — train the bridge"
+    ],
+    combos:[
+        {a:"Counter O-goshi", b:"Ura-nage", note:"Block their hip, lift and arch"},
+        {a:"Counter seoi-nage", b:"Ura-nage", note:"Grab around waist from behind"},
+        {a:"Grip fighting", b:"Ura-nage", note:"Win chest contact, then explode"}
+    ]
+},
+{
+    name:"Yoko-tomoe-nage", kanji:"横巴投", english:"Side Circle Throw",
+    cat:"sutemi", catName:"Sutemi-waza · Sacrifice Technique",
+    tori:[72,132, 76,122, 56,105, 108,102, 80,145, 66,178, 110,90],
+    uke:[120,48, 118,62, 104,68, 135,55, 115,82, 128,115, 122,108],
+    arc:"M138,48 Q108,8 62,55",
+    tips:[
+        "Fall to your side rather than straight back — this is the key difference from tomoe-nage",
+        "Place your foot on uke's hip or thigh on the side you're falling toward",
+        "Pull and twist uke over and to the side as you sacrifice",
+        "The sideways angle often catches opponents off guard"
+    ],
+    combos:[
+        {a:"Ko-uchi-gari", b:"Yoko-tomoe-nage", note:"Hook → side sacrifice"},
+        {a:"Failed seoi-nage", b:"Yoko-tomoe-nage", note:"Bail to the side under them"},
+        {a:"Yoko-tomoe-nage", b:"Newaza", note:"Flow directly into ground control"}
+    ]
+}
+];
+
+// =========================================================
+// SVG RENDERING
+// =========================================================
+
+function figSvg(pts, color, opacity) {
+    const [hx,hy, nx,ny, hlx,hly, hrx,hry, px,py, flx,fly, frx,fry] = pts;
+
+    function joint(ax,ay,bx,by,dir) {
+        const mx=(ax+bx)/2, my=(ay+by)/2;
+        const dx=bx-ax, dy=by-ay;
+        const l=Math.hypot(dx,dy)||1;
+        const b=Math.min(12, l*0.18);
+        return dir>0 ? [mx-dy/l*b, my+dx/l*b] : [mx+dy/l*b, my-dx/l*b];
+    }
+
+    const eL=joint(nx,ny,hlx,hly,1), eR=joint(nx,ny,hrx,hry,-1);
+    const kL=joint(px,py,flx,fly,1), kR=joint(px,py,frx,fry,-1);
+
+    return `<g opacity="${opacity}">
+        <line x1="${nx}" y1="${ny}" x2="${px}" y2="${py}" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
+        <path d="M${hlx},${hly} Q${eL[0]},${eL[1]} ${nx},${ny}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M${hrx},${hry} Q${eR[0]},${eR[1]} ${nx},${ny}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M${flx},${fly} Q${kL[0]},${kL[1]} ${px},${py}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M${frx},${fry} Q${kR[0]},${kR[1]} ${px},${py}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="${hx}" cy="${hy}" r="7" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="2"/>
+    </g>`;
+}
+
+function throwSvg(t) {
+    const ground = `<line x1="15" y1="188" x2="185" y2="188" stroke="${UKE}" stroke-width="0.5" opacity="0.1"/>`;
+    const arc = t.arc ? `<path d="${t.arc}" fill="none" stroke="${TORI}" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.25"/>` : '';
+    return `<svg viewBox="0 0 200 200" class="throw-svg">${ground}${arc}${figSvg(t.uke,UKE,0.5)}${figSvg(t.tori,TORI,1)}</svg>`;
+}
+
+// =========================================================
+// RENDERING
+// =========================================================
+
+const card = document.getElementById('throwCard');
+const tipsEl = document.getElementById('tipsSection');
+const combosEl = document.getElementById('combosSection');
+const dayCounter = document.getElementById('dayCounter');
+const todayBtn = document.getElementById('todayBtn');
+const dotsEl = document.getElementById('dots');
+
+const total = throws.length;
+const todayIndex = Math.floor(Date.now() / 86400000) % total;
+let current = todayIndex;
+
+function render(index, direction) {
+    const t = throws[index];
+    current = index;
+
+    // Day counter
+    dayCounter.textContent = `${index + 1} / ${total}`;
+
+    // Today button state
+    todayBtn.classList.toggle('is-today', index === todayIndex);
+
+    // Dots
+    dotsEl.innerHTML = throws.map((_, i) =>
+        `<span class="dot${i === index ? ' active' : ''}"></span>`
+    ).join('');
+
+    // Animate out
+    const exitClass = direction === 'next' ? 'exit-left' : direction === 'prev' ? 'exit-right' : 'enter';
+    card.classList.add(exitClass);
+
+    const delay = direction ? 200 : 0;
+
+    setTimeout(() => {
+        // Card content
+        card.innerHTML = `
+            <div class="illustration-wrap anim-in stagger-1">${throwSvg(t)}</div>
+            <div class="throw-info">
+                <div class="throw-name anim-in stagger-2">${t.name}</div>
+                <div class="throw-kanji anim-in stagger-2">${t.kanji}</div>
+                <div class="throw-english anim-in stagger-3">${t.english}</div>
+                <span class="category-pill anim-in stagger-3" data-cat="${t.cat}">${t.catName}</span>
+            </div>
+        `;
+
+        // Tips
+        tipsEl.innerHTML = `
+            <div class="section-label anim-in stagger-4">Entry Tips</div>
+            <ul class="tips-list anim-in stagger-4">
+                ${t.tips.map((tip, i) => `
+                    <li class="tip-item">
+                        <span class="tip-num">${i + 1}</span>
+                        <span>${tip}</span>
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+
+        // Combos
+        combosEl.innerHTML = `
+            <div class="section-label anim-in stagger-5">Combinations</div>
+            <div class="combo-list anim-in stagger-5">
+                ${t.combos.map(c => `
+                    <div class="combo-item">
+                        <span class="combo-throw">${c.a}</span>
+                        <span class="combo-arrow">&#10230;</span>
+                        <span class="combo-throw">${c.b}</span>
+                        <span class="combo-note">${c.note}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        // Remove exit class, trigger enter
+        card.classList.remove(exitClass);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, delay);
+}
+
+// =========================================================
+// NAVIGATION
+// =========================================================
+
+function go(dir) {
+    const next = (current + (dir === 'next' ? 1 : -1) + total) % total;
+    render(next, dir);
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => go('prev'));
+document.getElementById('nextBtn').addEventListener('click', () => go('next'));
+todayBtn.addEventListener('click', () => { if (current !== todayIndex) render(todayIndex, null); });
+
+// Keyboard
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go('next');
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go('prev');
+});
+
+// Touch swipe
+let touchStartX = 0;
+let touchStartY = 0;
+document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        go(dx < 0 ? 'next' : 'prev');
+    }
+}, { passive: true });
+
+// =========================================================
+// INIT
+// =========================================================
+
+render(todayIndex, null);
+
+</script>
+</body>
+</html>

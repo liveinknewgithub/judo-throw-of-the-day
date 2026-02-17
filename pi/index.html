@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judo Throw of the Day</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0b;
+    --surface: #141416;
+    --surface-2: #1c1c20;
+    --surface-3: #242428;
+    --border: #2a2a2f;
+    --text: #f0f0f2;
+    --text-dim: #8a8a95;
+    --text-muted: #5a5a65;
+    --accent: #e63946;
+    --accent-glow: rgba(230, 57, 70, 0.15);
+    --accent-soft: rgba(230, 57, 70, 0.08);
+    --gold: #f4a261;
+    --blue: #457b9d;
+    --green: #2a9d8f;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -1px;
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .header-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .day-counter {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 600;
+    background: var(--surface-2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* Main content */
+  .main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 16px 100px;
+  }
+
+  /* Hero card */
+  .hero-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .throw-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  .throw-image-container svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .throw-category-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .throw-difficulty {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 3px;
+  }
+
+  .diff-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .diff-dot.active {
+    background: var(--accent);
+  }
+
+  .hero-content {
+    padding: 20px;
+  }
+
+  .throw-japanese {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .throw-name {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .throw-translation {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  .throw-description {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+
+  /* Nav buttons */
+  .nav-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav-btn:hover {
+    background: var(--surface-2);
+    border-color: var(--text-muted);
+  }
+
+  .nav-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .nav-btn.primary:hover {
+    background: #d32f3d;
+  }
+
+  .nav-btn .arrow {
+    font-size: 16px;
+  }
+
+  /* Section cards */
+  .section-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background 0.15s;
+  }
+
+  .section-header:hover {
+    background: var(--surface-2);
+  }
+
+  .section-header:active {
+    background: var(--surface-3);
+  }
+
+  .section-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .section-icon.tips { background: rgba(42, 157, 143, 0.12); }
+  .section-icon.combos { background: rgba(69, 123, 157, 0.12); }
+  .section-icon.details { background: rgba(244, 162, 97, 0.12); }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .section-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+
+  .section-chevron {
+    color: var(--text-muted);
+    font-size: 18px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+  }
+
+  .section-card.open .section-chevron {
+    transform: rotate(180deg);
+  }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .section-card.open .section-body {
+    max-height: 2000px;
+  }
+
+  .section-body-inner {
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+
+  /* Tips list */
+  .tip-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .tip-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .tip-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: rgba(42, 157, 143, 0.1);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .tip-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+
+  .tip-text strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Combos */
+  .combo-item {
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .combo-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .combo-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .combo-sequence {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .combo-throw {
+    background: var(--surface-3);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .combo-throw.highlight {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid rgba(230, 57, 70, 0.2);
+  }
+
+  .combo-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .combo-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Details grid */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .detail-item {
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid var(--border);
+  }
+
+  .detail-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .detail-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Progress dots */
+  .progress-section {
+    text-align: center;
+    padding: 20px 0 8px;
+  }
+
+  .progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .progress-dot:hover {
+    background: var(--text-muted);
+  }
+
+  .progress-dot.seen {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .progress-dot.current {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.3);
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  /* Browse all */
+  .browse-section {
+    margin-top: 20px;
+  }
+
+  .browse-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  .browse-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .browse-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .browse-item:hover {
+    background: var(--surface-2);
+    border-color: var(--text-muted);
+  }
+
+  .browse-item.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .browse-item-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: -0.2px;
+  }
+
+  .browse-item-jp {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* Filter pills */
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .filter-row::-webkit-scrollbar { display: none; }
+
+  .filter-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .filter-pill:hover {
+    border-color: var(--text-muted);
+  }
+
+  .filter-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Responsive */
+  @media (min-width: 500px) {
+    .throw-name { font-size: 32px; }
+    .main { padding: 0 24px 100px; }
+  }
+
+  @media (max-width: 380px) {
+    .browse-grid { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">柔</div>
+    <div>
+      <div class="header-title">Throw of the Day</div>
+      <div class="header-subtitle">Daily Judo Practice</div>
+    </div>
+  </div>
+  <div class="day-counter" id="dayCounter">Day 1 / 20</div>
+</div>
+
+<div class="main">
+  <!-- Hero card -->
+  <div class="hero-card animate-in" id="heroCard">
+    <div class="throw-image-container" id="throwImage"></div>
+    <div class="hero-content">
+      <div class="throw-japanese" id="throwJapanese"></div>
+      <h1 class="throw-name" id="throwName"></h1>
+      <div class="throw-translation" id="throwTranslation"></div>
+      <div class="throw-description" id="throwDescription"></div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav-row">
+    <button class="nav-btn" id="prevBtn" onclick="prevThrow()">
+      <span class="arrow">←</span> Previous
+    </button>
+    <button class="nav-btn primary" id="nextBtn" onclick="nextThrow()">
+      Next <span class="arrow">→</span>
+    </button>
+  </div>
+
+  <!-- Entry Tips -->
+  <div class="section-card open" id="tipsSection">
+    <div class="section-header" onclick="toggleSection('tipsSection')">
+      <div class="section-header-left">
+        <div class="section-icon tips">💡</div>
+        <div>
+          <div class="section-title">Entry Tips</div>
+          <div class="section-subtitle">Keys to making this throw work</div>
+        </div>
+      </div>
+      <div class="section-chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-body-inner" id="tipsContent"></div>
+    </div>
+  </div>
+
+  <!-- Combinations -->
+  <div class="section-card" id="combosSection">
+    <div class="section-header" onclick="toggleSection('combosSection')">
+      <div class="section-header-left">
+        <div class="section-icon combos">🔗</div>
+        <div>
+          <div class="section-title">Combinations</div>
+          <div class="section-subtitle">Chain attacks that set up this throw</div>
+        </div>
+      </div>
+      <div class="section-chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-body-inner" id="combosContent"></div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="section-card" id="detailsSection">
+    <div class="section-header" onclick="toggleSection('detailsSection')">
+      <div class="section-header-left">
+        <div class="section-icon details">📋</div>
+        <div>
+          <div class="section-title">Throw Details</div>
+          <div class="section-subtitle">Category, difficulty & technique info</div>
+        </div>
+      </div>
+      <div class="section-chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-body-inner" id="detailsContent"></div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-dots" id="progressDots"></div>
+    <div class="progress-label" id="progressLabel"></div>
+  </div>
+
+  <!-- Browse all -->
+  <div class="browse-section">
+    <div class="browse-title">Browse All Throws</div>
+    <div class="filter-row" id="filterRow"></div>
+    <div class="browse-grid" id="browseGrid"></div>
+  </div>
+</div>
+
+<script>
+const throws = [
+  {
+    id: 'osotogari',
+    japanese: 'O-Soto-Gari',
+    name: 'Major Outer Reap',
+    translation: '大外刈 — "Big Outside Reap"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 2,
+    description: 'One of the first throws every judoka learns, and one of the most devastating. Drive your opponent backward, then sweep their supporting leg out from under them. Simple concept, terrifying power.',
+    tips: [
+      { title: 'Break balance backward', text: 'Pull their lapel up and toward you while pushing their sleeve across their body. Their weight must be on the heel of the leg you\'re reaping.' },
+      { title: 'Chest-to-chest contact', text: 'Step deep past their right foot. Your chest should press against theirs — if there\'s space between you, you\'ll be muscling the throw.' },
+      { title: 'Reap through, not at', text: 'Your leg should swing like a pendulum through their leg, not just touch it. Think of kicking a ball that\'s behind their calf.' },
+      { title: 'Head position matters', text: 'Look over their shoulder, not at the ground. Where your head goes, your body follows — look down and you\'ll stall.' }
+    ],
+    combos: [
+      { label: 'Setup Combo', throws: ['O-Uchi-Gari', 'O-Soto-Gari'], highlight: 1, note: 'Attack inside leg first. When they shift weight to the outside leg, immediately switch to O-Soto-Gari.' },
+      { label: 'Counter Attack', throws: ['Block Seoi-nage', 'O-Soto-Gari'], highlight: 1, note: 'When opponent turns in for a forward throw and fails, their weight shifts back — reap immediately.' },
+      { label: 'Combination Chain', throws: ['Ko-Uchi-Gari', 'O-Uchi-Gari', 'O-Soto-Gari'], highlight: 2, note: 'Tap the ankle, attack the inside, then swing to the big outside reap. Three-step chain that overwhelms.' }
+    ],
+    details: { direction: 'Backward', grip: 'Standard lapel & sleeve', stance: 'Right vs Right', belt: 'White+' },
+    image: { color1: '#e63946', color2: '#c1121f', action: 'reap' }
+  },
+  {
+    id: 'seoinage',
+    japanese: 'Seoi-Nage',
+    name: 'Shoulder Throw',
+    translation: '背負投 — "Back Carry Throw"',
+    category: 'Te-waza',
+    categoryLabel: 'Hand',
+    difficulty: 2,
+    description: 'The quintessential judo throw. Turn your back to your opponent, load them onto your shoulders, and launch them over. It\'s the throw that defines judo — fast, flashy, and endlessly adaptable.',
+    tips: [
+      { title: 'Turn fast, not strong', text: 'Speed of entry beats power. Pivot on the ball of your foot and get your hips below theirs in one motion.' },
+      { title: 'Knees bent, hips low', text: 'Your belt line must be below theirs. Bend your knees, not your waist. Think "sit under them," not "bend over."' },
+      { title: 'Pull the sleeve hard', text: 'Your tsurite (sleeve hand) does the heavy lifting. Pull it across your body and upward — this loads them onto your back.' },
+      { title: 'Straighten legs to finish', text: 'Once loaded, straighten your legs and pull forward. The throw comes from your legs and the pull, not your back.' }
+    ],
+    combos: [
+      { label: 'Classic Setup', throws: ['Ko-Uchi-Gari', 'Seoi-Nage'], highlight: 1, note: 'Tap their front foot to make them step forward and commit weight — then spin in for the shoulder throw.' },
+      { label: 'Failed Seoi Follow-up', throws: ['Seoi-Nage', 'Ko-Uchi-Gari'], highlight: 1, note: 'If they block your entry, drop to a quick inside trip. They\'ll be leaning forward from defending.' },
+      { label: 'Fake Low, Go High', throws: ['O-Uchi-Gari feint', 'Seoi-Nage'], highlight: 1, note: 'Fake an inside reap to pull their attention low, then immediately spin in for the shoulder throw.' }
+    ],
+    details: { direction: 'Forward', grip: 'Lapel & sleeve (or cross grip)', stance: 'Right vs Right', belt: 'White+' },
+    image: { color1: '#457b9d', color2: '#1d3557', action: 'shoulder' }
+  },
+  {
+    id: 'uchimata',
+    japanese: 'Uchi-Mata',
+    name: 'Inner Thigh Throw',
+    translation: '内股 — "Inner Thigh"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 4,
+    description: 'The king of competition judo. More world championship matches have been won with Uchi-Mata than any other throw. Swing your leg between your opponent\'s thighs and sweep them into the air. Beautiful when it works, humbling when it doesn\'t.',
+    tips: [
+      { title: 'Step deep across', text: 'Your support foot must step across and past their centerline. If you\'re too far away, your sweeping leg can\'t reach. Think "step to their far foot."' },
+      { title: 'Lift with the sweeping leg', text: 'Your thigh sweeps their inner thigh upward and backward. Drive your leg up toward the ceiling like you\'re trying to kick the back of your own head.' },
+      { title: 'Pull them onto one foot', text: 'Before you sweep, your hands must pull their weight onto the leg you\'re attacking. They should be balanced on one foot.' },
+      { title: 'Commit fully', text: 'This is not a half-effort throw. Your whole body rotates, your support leg pivots, and you fall forward with them. Hesitation kills Uchi-Mata.' }
+    ],
+    combos: [
+      { label: 'The Classic', throws: ['O-Uchi-Gari', 'Uchi-Mata'], highlight: 1, note: 'Attack the inside first to shift their weight. As they defend, their inside leg becomes vulnerable to the Uchi-Mata sweep.' },
+      { label: 'Same-Side Switch', throws: ['Ko-Soto-Gari', 'Uchi-Mata'], highlight: 1, note: 'Fake outside, switch to inside. The direction change breaks their defensive stance.' },
+      { label: 'Elite Combo', throws: ['Uchi-Mata', 'O-Uchi-Gari', 'Uchi-Mata'], highlight: 2, note: 'Attack with Uchi-Mata, follow with inside reap when they defend, then come back to Uchi-Mata again. Relentless.' }
+    ],
+    details: { direction: 'Forward', grip: 'High lapel & sleeve', stance: 'Right vs Right', belt: 'Green+' },
+    image: { color1: '#f4a261', color2: '#e76f51', action: 'sweep-up' }
+  },
+  {
+    id: 'ogoshi',
+    japanese: 'O-Goshi',
+    name: 'Major Hip Throw',
+    translation: '大腰 — "Big Hip"',
+    category: 'Koshi-waza',
+    categoryLabel: 'Hip',
+    difficulty: 1,
+    description: 'The mother of all hip throws. Wrap your arm around their waist, load them onto your hip, and wheel them over. It\'s the foundation — learn this and every other hip throw makes sense.',
+    tips: [
+      { title: 'Wrap deep around the waist', text: 'Your arm goes all the way around their back at belt level. Not a shallow grab — reach until your hand is on the far side of their hip.' },
+      { title: 'Hip contact is everything', text: 'Your hip must be below and in front of theirs. Turn all the way in so your back is against their chest. If your hips aren\'t touching, it won\'t work.' },
+      { title: 'Lift with your legs', text: 'Once loaded, straighten your legs. The power comes from standing up while they\'re draped over your hip — not from your arms or back.' },
+      { title: 'Pull and rotate simultaneously', text: 'Your hands pull them forward and over your hip in a circular motion. Think of stirring a giant pot.' }
+    ],
+    combos: [
+      { label: 'Footwork Entry', throws: ['De-Ashi-Harai feint', 'O-Goshi'], highlight: 1, note: 'A quick foot sweep attempt makes them plant their feet — then turn in for the hip throw while they\'re rooted.' },
+      { label: 'Failed Hip Switch', throws: ['O-Goshi attempt', 'Harai-Goshi'], highlight: 1, note: 'If they block your hip, switch to a sweeping hip throw — same position, add the leg sweep.' },
+      { label: 'Push-Pull', throws: ['Push forward', 'O-Goshi'], highlight: 1, note: 'Push them backward, they push back — use their forward momentum to turn in and load them on your hip.' }
+    ],
+    details: { direction: 'Forward', grip: 'Lapel & around waist', stance: 'Right vs Right', belt: 'White+' },
+    image: { color1: '#2a9d8f', color2: '#264653', action: 'hip' }
+  },
+  {
+    id: 'deashiharai',
+    japanese: 'De-Ashi-Harai',
+    name: 'Advancing Foot Sweep',
+    translation: '出足払 — "Advancing Foot Sweep"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 3,
+    description: 'Pure timing made physical. As your opponent steps forward, sweep their advancing foot at the exact moment it bears no weight. No strength needed — just timing so perfect it looks like magic.',
+    tips: [
+      { title: 'It\'s ALL about timing', text: 'Sweep their foot the instant it\'s about to land but hasn\'t taken weight yet. Too early and they\'ll adjust. Too late and they\'re planted.' },
+      { title: 'Use the sole of your foot', text: 'Sweep with the bottom of your foot against their ankle, not your shin or instep. Think "wipe the floor" sideways with your sole.' },
+      { title: 'Create the step', text: 'Don\'t wait for them to step — make them. Pull them forward with your hands so they have to step, then sweep that step.' },
+      { title: 'Hands do 50% of the work', text: 'Your pull should lift and rotate them in the direction of the sweep. Without hand action, the foot sweep is just a tap.' }
+    ],
+    combos: [
+      { label: 'Circle and Sweep', throws: ['Circle movement', 'De-Ashi-Harai'], highlight: 1, note: 'Move them in a circle. When their outside foot advances to catch up, sweep it. Circular motion creates perfect timing windows.' },
+      { label: 'Counter to Counter', throws: ['De-Ashi-Harai', 'Sasae-Tsuri-Komi-Ashi'], highlight: 1, note: 'If the first sweep misses, immediately prop their other ankle as they recover. Miss one foot, catch the other.' },
+      { label: 'To a Big Throw', throws: ['De-Ashi-Harai attempt', 'Seoi-Nage'], highlight: 1, note: 'Use the sweep to break their posture forward, then immediately turn in for a shoulder throw. Classic small-to-big sequence.' }
+    ],
+    details: { direction: 'Lateral/Forward', grip: 'Standard lapel & sleeve', stance: 'Any', belt: 'Yellow+' },
+    image: { color1: '#8ecae6', color2: '#219ebc', action: 'foot-sweep' }
+  },
+  {
+    id: 'haraigoshi',
+    japanese: 'Harai-Goshi',
+    name: 'Sweeping Hip Throw',
+    translation: '払腰 — "Sweeping Hip"',
+    category: 'Koshi-waza',
+    categoryLabel: 'Hip',
+    difficulty: 3,
+    description: 'O-Goshi\'s more athletic sibling. Load them on your hip like a hip throw, but add a sweeping leg to knock their far leg up. Combines the power of a hip throw with the surprise of a leg sweep.',
+    tips: [
+      { title: 'Hip entry first', text: 'Get your hip in position exactly like O-Goshi. The sweep is the finish, not the throw — if your hip isn\'t in place, the sweep does nothing.' },
+      { title: 'Sweep with the back of your leg', text: 'Your sweeping leg should contact the front of their thigh with the back of your thigh/hamstring. Sweep their leg up and back.' },
+      { title: 'Straighten the sweeping leg', text: 'Drive your leg straight and high. A bent, lazy sweep won\'t lift them. Think of drawing a big arc toward the ceiling.' },
+      { title: 'Pull hard with both hands', text: 'Harai-Goshi needs aggressive hand action. Pull them over your hip — if your hands are passive, they\'ll just lean on your back.' }
+    ],
+    combos: [
+      { label: 'Inside-Outside', throws: ['O-Uchi-Gari', 'Harai-Goshi'], highlight: 1, note: 'Attack the inside leg, then as they shift weight outward, turn in and sweep their now-weighted outside leg.' },
+      { label: 'Hip to Hip', throws: ['O-Goshi blocked', 'Harai-Goshi'], highlight: 1, note: 'If they block your hip throw by widening their base, the sweep catches that widened leg perfectly.' },
+      { label: 'Triple Threat', throws: ['Ko-Uchi-Gari', 'Uchi-Mata', 'Harai-Goshi'], highlight: 2, note: 'Small trip, inner thigh attack, then sweep the hip. Three different angles in rapid succession.' }
+    ],
+    details: { direction: 'Forward', grip: 'High lapel & sleeve', stance: 'Right vs Right', belt: 'Yellow+' },
+    image: { color1: '#6a994e', color2: '#386641', action: 'hip-sweep' }
+  },
+  {
+    id: 'taiotoshi',
+    japanese: 'Tai-Otoshi',
+    name: 'Body Drop',
+    translation: '体落 — "Body Drop"',
+    category: 'Te-waza',
+    categoryLabel: 'Hand',
+    difficulty: 3,
+    description: 'No hip contact needed. Pull your opponent over your outstretched leg using pure hand technique and body rotation. A masterclass in using leverage instead of strength.',
+    tips: [
+      { title: 'Hands do everything', text: 'This is a hand throw. Pull their sleeve across your body and down, while your lapel hand lifts and rotates them. Your leg is just a barrier.' },
+      { title: 'Outstretched leg as a tripwire', text: 'Your leg extends in front of their shin — they fall over it. Don\'t kick at them; just place it like a log across a path.' },
+      { title: 'Rotate your whole body', text: 'Think of spinning on an axis. Your rotation creates the throwing force. Your arms transmit your body\'s rotation into them.' },
+      { title: 'Stay low on the support leg', text: 'Bend your support knee deep. If you\'re standing tall on your pivot leg, you\'ll lose the leverage angle and they\'ll stay up.' }
+    ],
+    combos: [
+      { label: 'Sweep then Drop', throws: ['De-Ashi-Harai', 'Tai-Otoshi'], highlight: 1, note: 'A foot sweep forces them to plant — immediately spin and drop them over your extended leg.' },
+      { label: 'Fake Forward, Drop', throws: ['Seoi-Nage fake', 'Tai-Otoshi'], highlight: 1, note: 'Start turning for a shoulder throw. If they resist by pulling back, switch to the body drop using their backward momentum.' },
+      { label: 'Push-Pull Series', throws: ['Push', 'Pull', 'Tai-Otoshi'], highlight: 2, note: 'Push them back, they push forward — pull them forward and drop them over your leg.' }
+    ],
+    details: { direction: 'Forward', grip: 'Standard lapel & sleeve', stance: 'Right vs Right', belt: 'Yellow+' },
+    image: { color1: '#9b5de5', color2: '#7b2cbf', action: 'body-drop' }
+  },
+  {
+    id: 'kouchi',
+    japanese: 'Ko-Uchi-Gari',
+    name: 'Minor Inner Reap',
+    translation: '小内刈 — "Small Inside Reap"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 2,
+    description: 'The Swiss army knife of judo. A small, quick reap of the inside of their ankle. Rarely scores ippon on its own, but sets up everything else. If you only learn one setup throw, make it this one.',
+    tips: [
+      { title: 'Reap the heel, not the foot', text: 'Hook the back of their heel/achilles with the sole of your foot and pull it toward you. Don\'t kick their foot sideways — reap it backward.' },
+      { title: 'Push them straight back', text: 'Your hands push their upper body backward at the same time your foot reaps. Both actions create the same direction of force.' },
+      { title: 'Keep it quick and light', text: 'This isn\'t a power throw. It\'s a fast tap that off-balances. Don\'t commit your whole body — stay balanced and ready for the next attack.' },
+      { title: 'Target the front foot', text: 'Attack the foot that\'s bearing more weight. In a standard stance, this is usually their lead foot.' }
+    ],
+    combos: [
+      { label: 'The Bread & Butter', throws: ['Ko-Uchi-Gari', 'Seoi-Nage'], highlight: 1, note: 'Quick inside trip to break posture forward, then spin in for the shoulder throw. The most common combo in all of judo.' },
+      { label: 'Low-Low-High', throws: ['Ko-Uchi-Gari', 'O-Uchi-Gari', 'Harai-Goshi'], highlight: 2, note: 'Small inside, big inside, sweeping hip. Each attack builds on the reaction from the last.' },
+      { label: 'Ankle Pick Setup', throws: ['Ko-Uchi-Gari', 'Ko-Uchi-Gari again', 'Score'], highlight: 2, note: 'Same attack twice. First one is a setup, second one scores because they expect a switch to something else.' }
+    ],
+    details: { direction: 'Backward', grip: 'Standard lapel & sleeve', stance: 'Any', belt: 'White+' },
+    image: { color1: '#e9c46a', color2: '#e76f51', action: 'small-reap' }
+  },
+  {
+    id: 'ouchigari',
+    japanese: 'O-Uchi-Gari',
+    name: 'Major Inner Reap',
+    translation: '大内刈 — "Big Inside Reap"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 2,
+    description: 'Ko-Uchi\'s bigger brother. Step between their legs and reap their far leg from the inside. Drives them straight backward. A workhorse throw that sets up half of judo\'s throwing game.',
+    tips: [
+      { title: 'Step between their feet', text: 'Your support foot must go between their feet, close to their standing foot. If you\'re too far away, your reaping leg won\'t reach deep enough.' },
+      { title: 'Reap across their body', text: 'Your sweeping leg hooks their far leg at the calf and sweeps it toward their other foot. You\'re sweeping diagonally, not straight back.' },
+      { title: 'Push at a 45° angle', text: 'Your hands push their upper body back and slightly to the side of the leg you\'re reaping. This creates a diagonal off-balance.' },
+      { title: 'Follow through', text: 'Keep driving forward after the reap. A half-hearted O-Uchi gives them time to hop and recover. Walk through them.' }
+    ],
+    combos: [
+      { label: 'The Big Pair', throws: ['O-Uchi-Gari', 'O-Soto-Gari'], highlight: 1, note: 'Inside reap → outside reap. Attack inside first, they shift weight outside to defend, and you reap the now-loaded outside leg.' },
+      { label: 'Inside Out', throws: ['O-Uchi-Gari', 'Uchi-Mata'], highlight: 1, note: 'The O-Uchi drives them to react by pulling their leg away. As they pull, switch to Uchi-Mata and sweep the inner thigh.' },
+      { label: 'Drop Series', throws: ['O-Uchi-Gari', 'Seoi-Nage'], highlight: 1, note: 'Attacking backward opens up the forward throw. O-Uchi pushes them back, they resist forward, you turn in and throw.' }
+    ],
+    details: { direction: 'Backward', grip: 'Standard lapel & sleeve', stance: 'Right vs Right', belt: 'White+' },
+    image: { color1: '#f07167', color2: '#b5179e', action: 'inner-reap' }
+  },
+  {
+    id: 'tsurikomigoshi',
+    japanese: 'Tsuri-Komi-Goshi',
+    name: 'Lifting Pulling Hip',
+    translation: '釣込腰 — "Lift-Pull Hip"',
+    category: 'Koshi-waza',
+    categoryLabel: 'Hip',
+    difficulty: 3,
+    description: 'The refined hip throw. Instead of wrapping the waist, you grip high on the lapel and pull them up and over your hip. Favored by smaller judoka who need lift more than wrap.',
+    tips: [
+      { title: 'Grip high on the lapel', text: 'Your lapel hand should be up near their collar or shoulder. This high grip gives you the leverage to lift and pull them up onto their toes.' },
+      { title: 'Tsuri = Lift', text: 'The "tsuri" means fishing/lifting. Pull upward on the lapel to break their posture up and forward before you turn in.' },
+      { title: 'Hips lower than O-Goshi', text: 'You need to get lower because you\'re pulling up rather than wrapping around. More knee bend, deeper entry.' },
+      { title: 'Spring up to finish', text: 'Once loaded, spring upward with your legs while maintaining the pull. It\'s an upward lift combined with a forward rotation.' }
+    ],
+    combos: [
+      { label: 'Grip Fighting Entry', throws: ['Get high grip', 'Tsuri-Komi-Goshi'], highlight: 1, note: 'Fight for the high collar grip. Once you have it, you\'re already halfway to the throw entry.' },
+      { label: 'Hip Switch', throws: ['O-Goshi blocked', 'Tsuri-Komi-Goshi'], highlight: 1, note: 'If they block the waist grip, switch to the high lapel pull. Different mechanics bypass the same defense.' },
+      { label: 'Foot Sweep Setup', throws: ['Sasae feint', 'Tsuri-Komi-Goshi'], highlight: 1, note: 'Prop their ankle to make them lift their foot, then spin in under them for the hip throw.' }
+    ],
+    details: { direction: 'Forward', grip: 'High lapel & sleeve', stance: 'Right vs Right', belt: 'Yellow+' },
+    image: { color1: '#00b4d8', color2: '#0077b6', action: 'lift-hip' }
+  },
+  {
+    id: 'tomoerage',
+    japanese: 'Tomoe-Nage',
+    name: 'Circle Throw',
+    translation: '巴投 — "Stomach Throw"',
+    category: 'Sutemi-waza',
+    categoryLabel: 'Sacrifice',
+    difficulty: 3,
+    description: 'Fall on your back, plant your foot in their stomach, and launch them over you in a complete circle. The crowd-favorite sacrifice throw. High risk, high reward, absolutely spectacular.',
+    tips: [
+      { title: 'Commit or eat it', text: 'You\'re falling on your back. If you hesitate halfway, you end up on the ground under them with nothing to show for it. Full commitment only.' },
+      { title: 'Foot placement is critical', text: 'Plant the ball of your foot on their lower abdomen or belt knot. Too high and you can\'t lift. Too low and you push them over you without the rotation.' },
+      { title: 'Sit close to them', text: 'Drop your butt as close to their feet as possible. The further away you sit, the weaker the throw. Your hips should almost be between their feet.' },
+      { title: 'Pull with your arms, lift with the leg', text: 'Your hands pull them down and over you while your foot leg-presses them into the air. It\'s a coordinated pull-and-push.' }
+    ],
+    combos: [
+      { label: 'Forward Pressure Setup', throws: ['Push forward', 'Tomoe-Nage'], highlight: 1, note: 'Push them — they push back. Drop under their forward pressure and use it to launch them.' },
+      { label: 'Failed Forward Throw', throws: ['Seoi-Nage blocked', 'Tomoe-Nage'], highlight: 1, note: 'If your shoulder throw is stuffed and you\'re low already, sacrifice throw from there. They won\'t expect the direction change.' },
+      { label: 'Grip Break Counter', throws: ['Break grip attempt', 'Tomoe-Nage'], highlight: 1, note: 'When they step in to re-establish grips, drop under them. Their forward movement loads the throw.' }
+    ],
+    details: { direction: 'Backward (sacrifice)', grip: 'Standard lapel & sleeve', stance: 'Any', belt: 'Green+' },
+    image: { color1: '#ff6b6b', color2: '#c92a2a', action: 'circle' }
+  },
+  {
+    id: 'kosotogari',
+    japanese: 'Ko-Soto-Gari',
+    name: 'Minor Outer Reap',
+    translation: '小外刈 — "Small Outside Reap"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 2,
+    description: 'The sneaky outside trip. Hook behind their ankle from the outside and chop them down backward. Quick, efficient, and works brilliantly against opponents standing too tall.',
+    tips: [
+      { title: 'Hook behind the heel', text: 'Your foot hooks behind their heel from the outside. Think of hooking a door stop — catch the ankle and pull it toward you.' },
+      { title: 'Pull them onto that foot first', text: 'Use your hands to shift their weight onto the leg you\'re attacking. If they have no weight on it, there\'s nothing to reap.' },
+      { title: 'Step close', text: 'Your supporting foot must be close to their foot. If you\'re reaching with your reaping leg, you\'re too far away and off-balance yourself.' },
+      { title: 'Drive through at an angle', text: 'Push them back and to the side of the reaped leg. They should fall over the leg you\'re attacking, not straight back.' }
+    ],
+    combos: [
+      { label: 'Switch-up', throws: ['O-Soto-Gari feint', 'Ko-Soto-Gari'], highlight: 1, note: 'Fake the big outer reap — as they brace for it, quickly sneak in the small outer reap on the same leg.' },
+      { label: 'Clinch Attack', throws: ['Close distance', 'Ko-Soto-Gari'], highlight: 1, note: 'In close quarters where big throws are hard, the small outer reap works perfectly. Great from body lock positions.' },
+      { label: 'Double Outside', throws: ['Ko-Soto-Gari', 'O-Soto-Gari'], highlight: 1, note: 'Small outside reap to off-balance, then immediately follow with the big outside reap while they\'re stumbling.' }
+    ],
+    details: { direction: 'Backward', grip: 'Standard or close grip', stance: 'Any', belt: 'White+' },
+    image: { color1: '#845ef7', color2: '#5f3dc4', action: 'small-outer' }
+  },
+  {
+    id: 'koshiguruma',
+    japanese: 'Koshi-Guruma',
+    name: 'Hip Wheel',
+    translation: '腰車 — "Hip Wheel"',
+    category: 'Koshi-waza',
+    categoryLabel: 'Hip',
+    difficulty: 2,
+    description: 'Wrap your arm around their neck, load them on your hip, and wheel them over. Like O-Goshi but with a headlock grip. Less elegant, more street-effective.',
+    tips: [
+      { title: 'Wrap the neck, not the head', text: 'Your arm goes around the back of their neck, not on top of their head. This gives you control without being illegal in competition.' },
+      { title: 'Same hip principles as O-Goshi', text: 'Get your hip below theirs, turn in fully, make chest-to-back contact. The only difference is where your arm goes.' },
+      { title: 'Pull their head down', text: 'Use the neck wrap to break their posture forward and down. Once their head is below their hips, the throw is almost guaranteed.' },
+      { title: 'Great from headlock grip', text: 'If you naturally end up with an over-the-shoulder grip, this throw is right there. Don\'t fight for a different grip — use what you have.' }
+    ],
+    combos: [
+      { label: 'Snap Down Entry', throws: ['Snap head down', 'Koshi-Guruma'], highlight: 1, note: 'Snap their head down to break posture, wrap the neck as they come forward, turn in for the throw.' },
+      { label: 'From Failed Seoi', throws: ['Seoi-Nage blocked', 'Koshi-Guruma'], highlight: 1, note: 'If shoulder throw is stuffed, you\'re already turned in — wrap the neck and finish with the hip wheel.' },
+      { label: 'Grip Transition', throws: ['Fight for grip', 'Over-the-top', 'Koshi-Guruma'], highlight: 2, note: 'When you can\'t get standard grips, throw the arm over their shoulder, wrap the neck, and attack.' }
+    ],
+    details: { direction: 'Forward', grip: 'Neck wrap & sleeve', stance: 'Right vs Right', belt: 'White+' },
+    image: { color1: '#20c997', color2: '#087f5b', action: 'neck-wheel' }
+  },
+  {
+    id: 'hanegoshi',
+    japanese: 'Hane-Goshi',
+    name: 'Spring Hip Throw',
+    translation: '跳腰 — "Spring Hip"',
+    category: 'Koshi-waza',
+    categoryLabel: 'Hip',
+    difficulty: 4,
+    description: 'The explosive hip throw. Like Harai-Goshi but instead of sweeping, you spring their leg up with yours. Think of your leg as a loaded spring that launches their leg skyward.',
+    tips: [
+      { title: 'Contact with your outer thigh', text: 'The back/outside of your thigh contacts the front of their thigh. You\'re not sweeping like Harai — you\'re springing upward.' },
+      { title: 'Spring action, not sweep', text: 'Bend your sweeping leg, then explosively extend it. The catapult-like action distinguishes Hane from Harai-Goshi.' },
+      { title: 'Hip must be fully loaded', text: 'Like all hip throws, they must be loaded on your hip first. The spring kick is the finish, not the setup.' },
+      { title: 'Snap your head forward', text: 'As you spring, your head and upper body dive forward. This combined with the leg spring creates a powerful rotational force.' }
+    ],
+    combos: [
+      { label: 'Classic Hip Combo', throws: ['O-Goshi fake', 'Hane-Goshi'], highlight: 1, note: 'Start with a simple hip throw. When they defend by widening stance, spring their lead leg up.' },
+      { label: 'Low-High', throws: ['Ko-Uchi-Gari', 'Hane-Goshi'], highlight: 1, note: 'Trip the ankle to get them stepping forward, then turn in and spring.' },
+      { label: 'Hip Series', throws: ['Harai-Goshi feint', 'Hane-Goshi'], highlight: 1, note: 'Start with a sweeping motion, then switch to the spring. Changes the angle of attack from the same position.' }
+    ],
+    details: { direction: 'Forward', grip: 'Standard lapel & sleeve', stance: 'Right vs Right', belt: 'Green+' },
+    image: { color1: '#ffd43b', color2: '#fab005', action: 'spring-hip' }
+  },
+  {
+    id: 'sasae',
+    japanese: 'Sasae-Tsuri-Komi-Ashi',
+    name: 'Propping Ankle Throw',
+    translation: '支釣込足 — "Propping Lifting Foot"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 3,
+    description: 'Plant your foot against their ankle like a doorstop, then wheel them over it. A beautiful timing throw — you prop the ankle, then use your hands to spin them over the prop.',
+    tips: [
+      { title: 'Sole of foot against their ankle', text: 'Press the sole of your foot against the front of their ankle or lower shin. You\'re creating a fixed point that they rotate over.' },
+      { title: 'Lift and pull simultaneously', text: 'Your hands do the throwing. Lift them up onto the propped foot, then pull them in a circular arc over it.' },
+      { title: 'Timing: as they step forward', text: 'Prop their foot just as they\'re about to step. Their momentum plus your rotation creates the throw.' },
+      { title: 'Think "wheel" not "trip"', text: 'You\'re wheeling them over a fixed point, not tripping them. The rotation comes from your hands, the prop is just the fulcrum.' }
+    ],
+    combos: [
+      { label: 'Double Foot Attack', throws: ['De-Ashi-Harai miss', 'Sasae'], highlight: 1, note: 'If the foot sweep misses, immediately prop the same or opposite foot. Two foot attacks in quick succession.' },
+      { label: 'Circle and Prop', throws: ['Circle movement', 'Sasae'], highlight: 1, note: 'Move them in a circle. As their foot advances to keep up, prop it and wheel them over.' },
+      { label: 'Prop to Throw', throws: ['Sasae attempt', 'Tai-Otoshi'], highlight: 1, note: 'A failed prop makes them stumble forward — immediately switch to a body drop using that forward momentum.' }
+    ],
+    details: { direction: 'Forward/Circular', grip: 'Standard lapel & sleeve', stance: 'Any', belt: 'Yellow+' },
+    image: { color1: '#74c0fc', color2: '#339af0', action: 'prop-ankle' }
+  },
+  {
+    id: 'sumigaeshi',
+    japanese: 'Sumi-Gaeshi',
+    name: 'Corner Reversal',
+    translation: '隅返 — "Corner Reversal"',
+    category: 'Sutemi-waza',
+    categoryLabel: 'Sacrifice',
+    difficulty: 3,
+    description: 'The sneaky sacrifice throw. Fall to your side, hook their leg with yours, and flip them over you. Works beautifully against bent-over defensive postures.',
+    tips: [
+      { title: 'Hook their inner thigh', text: 'Your foot hooks behind their inner thigh, not their knee or ankle. The thigh gives you the best leverage to elevate and flip them.' },
+      { title: 'Fall to the side, not straight back', text: 'Drop toward the corner (your back-corner), not straight backward. This angular fall creates the rotation needed to flip them.' },
+      { title: 'Works against bent posture', text: 'When they\'re hunched over fighting grips, their weight is forward — perfect for pulling them over you.' },
+      { title: 'Butterfly guard connection', text: 'If you do BJJ, this is essentially a butterfly sweep. Same mechanics: hook, elevate, roll them over.' }
+    ],
+    combos: [
+      { label: 'Grip Fight Counter', throws: ['Opponent bends over', 'Sumi-Gaeshi'], highlight: 1, note: 'When they adopt a defensive bent posture, drop under and flip. Their defensive posture is your opportunity.' },
+      { label: 'Failed Forward Attack', throws: ['Uchi-Mata blocked', 'Sumi-Gaeshi'], highlight: 1, note: 'If your standing throw is stuffed and you\'re off-balance forward, sacrifice into Sumi-Gaeshi.' },
+      { label: 'Guard Pull to Throw', throws: ['Pull guard', 'Sumi-Gaeshi'], highlight: 1, note: 'Deliberately sit to guard, then immediately sweep with Sumi-Gaeshi. Legal in judo if executed as one motion.' }
+    ],
+    details: { direction: 'Backward (sacrifice)', grip: 'Lapel & belt/back', stance: 'Any', belt: 'Green+' },
+    image: { color1: '#da77f2', color2: '#9c36b5', action: 'corner-flip' }
+  },
+  {
+    id: 'hizaguruma',
+    japanese: 'Hiza-Guruma',
+    name: 'Knee Wheel',
+    translation: '膝車 — "Knee Wheel"',
+    category: 'Ashi-waza',
+    categoryLabel: 'Foot & Leg',
+    difficulty: 3,
+    description: 'Block their knee with your foot and wheel them over it. Like Sasae but higher up the leg. The block at the knee creates a powerful fulcrum point that they cartwheel over.',
+    tips: [
+      { title: 'Sole of foot on the knee', text: 'Place the sole of your foot against the side of their knee. Not the kneecap — the side, where you won\'t cause injury but create a solid block.' },
+      { title: 'Block the far knee', text: 'Block the knee furthest from you. This creates a longer lever arm and a more powerful wheel.' },
+      { title: 'Hands create the wheel', text: 'Your hands pull them in a circular arc over their blocked knee. Think of turning a big steering wheel.' },
+      { title: 'Works great during lateral movement', text: 'When they\'re moving sideways and their far leg is loaded, that\'s the moment to block the knee and wheel.' }
+    ],
+    combos: [
+      { label: 'Level Change', throws: ['Sasae attempt (low)', 'Hiza-Guruma (high)'], highlight: 1, note: 'Try the ankle prop first. When they lift that foot, immediately target the knee instead. Low to high.' },
+      { label: 'Lateral Attack', throws: ['Side movement', 'Hiza-Guruma'], highlight: 1, note: 'Pull them sideways, then block the knee they\'re about to load weight on. Their momentum does the rest.' },
+      { label: 'To Big Throw', throws: ['Hiza-Guruma attempt', 'Harai-Goshi'], highlight: 1, note: 'If the knee wheel doesn\'t complete, turn your body in and finish with a sweeping hip throw. Same leg, different technique.' }
+    ],
+    details: { direction: 'Forward/Lateral', grip: 'Standard lapel & sleeve', stance: 'Any', belt: 'Yellow+' },
+    image: { color1: '#63e6be', color2: '#12b886', action: 'knee-block' }
+  },
+  {
+    id: 'uranage',
+    japanese: 'Ura-Nage',
+    name: 'Rear Throw',
+    translation: '裏投 — "Back/Rear Throw"',
+    category: 'Sutemi-waza',
+    categoryLabel: 'Sacrifice',
+    difficulty: 4,
+    description: 'The suplex of judo. Grab your opponent, arch your back, and throw them over your shoulder while you both go airborne. Raw power meets controlled chaos. Not for the faint-hearted.',
+    tips: [
+      { title: 'Body lock grip', text: 'Wrap both arms around their torso — over one arm, under the other. Lock your hands at their lower back. You need a bear hug, not a gentle embrace.' },
+      { title: 'Hips in tight', text: 'Press your hips against theirs. The throw comes from arching your back with them attached — any gap and they slip free.' },
+      { title: 'Arch and rotate', text: 'Arch your back explosively while turning to the side. You\'re not suplexing them straight over — rotate so they land beside you, not on their head.' },
+      { title: 'Bridge with your hips', text: 'The power is in your hip bridge, not your arms. Think of a wrestler\'s bridge — drive your hips upward while arching back.' }
+    ],
+    combos: [
+      { label: 'Counter Attack', throws: ['Block their throw', 'Ura-Nage'], highlight: 1, note: 'When they turn in for a forward throw and fail, you\'re chest-to-back — wrap them and arch them over.' },
+      { label: 'Body Lock Entry', throws: ['Underhook', 'Body lock', 'Ura-Nage'], highlight: 2, note: 'Get an underhook, convert to body lock, then fire the throw. Wrestling-style entry into judo technique.' },
+      { label: 'Pressure Counter', throws: ['They push forward', 'Ura-Nage'], highlight: 1, note: 'When they drive into you aggressively, accept their pressure, wrap up, and redirect them over your back.' }
+    ],
+    details: { direction: 'Backward (sacrifice)', grip: 'Body lock / bear hug', stance: 'Any', belt: 'Brown+' },
+    image: { color1: '#ff922b', color2: '#d9480f', action: 'arch-back' }
+  },
+  {
+    id: 'taniotoshi',
+    japanese: 'Tani-Otoshi',
+    name: 'Valley Drop',
+    translation: '谷落 — "Valley Drop"',
+    category: 'Sutemi-waza',
+    categoryLabel: 'Sacrifice',
+    difficulty: 3,
+    description: 'Drop to the mat beside them, blocking their leg with yours, and pull them down into the "valley" you\'ve created. The side sacrifice throw that punishes anyone leaning too far forward.',
+    tips: [
+      { title: 'Drop to the side, not backward', text: 'Sit down beside their leg, not behind them. Your body creates a wall on one side that they topple over.' },
+      { title: 'Block their leg with yours', text: 'Your near leg extends behind both their legs. As you drop, this leg prevents them from stepping over you.' },
+      { title: 'Strong pull sideways', text: 'Your hands pull them laterally over your body. The direction is sideways and down, not forward.' },
+      { title: 'Works great as a counter', text: 'When they over-commit to a forward throw, drop to the side and take them down. Their forward momentum works against them.' }
+    ],
+    combos: [
+      { label: 'Counter to Hip Throw', throws: ['Block their Harai-Goshi', 'Tani-Otoshi'], highlight: 1, note: 'When they attempt a hip throw and you end up beside them, sit and pull them into the valley. Classic counter.' },
+      { label: 'From Failed Standing', throws: ['O-Soto-Gari stuffed', 'Tani-Otoshi'], highlight: 1, note: 'If your standing rear attack is blocked, sacrifice to the side. Same general direction, different level.' },
+      { label: 'Clinch Sequence', throws: ['Underhook fight', 'Tani-Otoshi'], highlight: 1, note: 'In a tight clinch where neither judoka can throw standing, drop and sacrifice. Changes the game entirely.' }
+    ],
+    details: { direction: 'Sideways (sacrifice)', grip: 'Various — works from many grips', stance: 'Any', belt: 'Green+' },
+    image: { color1: '#ced4da', color2: '#868e96', action: 'side-drop' }
+  },
+  {
+    id: 'kataguruma',
+    japanese: 'Kata-Guruma',
+    name: 'Shoulder Wheel',
+    translation: '肩車 — "Shoulder Wheel"',
+    category: 'Te-waza',
+    categoryLabel: 'Hand',
+    difficulty: 5,
+    description: 'The fireman\'s carry of judo. Duck under, load them across your shoulders, and wheel them off. Since the IJF banned grabbing legs, this is now done with a no-leg-grab entry — making it even more impressive.',
+    tips: [
+      { title: 'Drop level explosively', text: 'Duck deep under their center of gravity. You need to get your shoulders below their hips — this requires a deep, explosive level change.' },
+      { title: 'Modern rules: no leg grab', text: 'Under current IJF rules, you can\'t grab their leg. Instead, control the sleeve and lapel, duck under, and use shoulder/back contact to load them.' },
+      { title: 'Drive across, not up', text: 'Once loaded, wheel them across your shoulders laterally. Think of a wheel turning — they go from one side to the other across your back.' },
+      { title: 'Requires explosive speed', text: 'This throw only works if you\'re faster than their reaction. If they see it coming, they sprawl and you\'re underneath them. Speed is non-negotiable.' }
+    ],
+    combos: [
+      { label: 'Level Change Attack', throws: ['High attack feint', 'Kata-Guruma'], highlight: 1, note: 'Fake a high attack to get them bracing up, then duck underneath. The level change catches them off guard.' },
+      { label: 'From Snap Down', throws: ['Snap down', 'Kata-Guruma'], highlight: 1, note: 'Pull their head down, then duck under and across. Their bent posture makes it easier to load them.' },
+      { label: 'Misdirection', throws: ['Ko-Uchi-Gari', 'Kata-Guruma'], highlight: 1, note: 'Low ankle attack to focus their attention downward, then change levels and load them across your shoulders.' }
+    ],
+    details: { direction: 'Forward/Lateral', grip: 'Sleeve & shoulder/back', stance: 'Any', belt: 'Brown+' },
+    image: { color1: '#ffa94d', color2: '#fd7e14', action: 'shoulder-wheel' }
+  }
+];
+
+// ============================================================
+// APPLICATION LOGIC
+// ============================================================
+
+// Determine today's throw based on the date
+function getTodayIndex() {
+  const now = new Date();
+  const start = new Date(2025, 0, 1); // Jan 1, 2025
+  const daysSinceStart = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  return daysSinceStart % throws.length;
+}
+
+let currentIndex = getTodayIndex();
+let seenThrows = JSON.parse(localStorage.getItem('judo-seen') || '[]');
+let activeFilter = 'All';
+
+// Generate throw illustration SVG
+function generateThrowSVG(throwData) {
+  const c1 = throwData.image.color1;
+  const c2 = throwData.image.color2;
+  const id = throwData.id;
+
+  // Each throw gets a unique stylized illustration using geometric shapes
+  const figures = {
+    'osotogari': `
+      <circle cx="200" cy="120" r="22" fill="${c1}" opacity="0.9"/>
+      <line x1="200" y1="142" x2="200" y2="210" stroke="${c1}" stroke-width="5" stroke-linecap="round"/>
+      <line x1="200" y1="165" x2="170" y2="145" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="200" y1="165" x2="240" y2="155" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="200" y1="210" x2="185" y2="260" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="200" y1="210" x2="250" y2="230" stroke="${c1}" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="280" cy="140" r="22" fill="${c2}" opacity="0.9"/>
+      <line x1="280" y1="162" x2="270" y2="230" stroke="${c2}" stroke-width="5" stroke-linecap="round"/>
+      <line x1="280" y1="185" x2="250" y2="165" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="280" y1="185" x2="310" y2="170" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="270" y1="230" x2="255" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="270" y1="230" x2="290" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 248 228 Q 260 210 250 190" stroke="${c1}" stroke-width="3" fill="none" stroke-dasharray="6 4" opacity="0.6"/>
+    `,
+    'default': `
+      <circle cx="210" cy="125" r="22" fill="${c1}" opacity="0.9"/>
+      <line x1="210" y1="147" x2="210" y2="215" stroke="${c1}" stroke-width="5" stroke-linecap="round"/>
+      <line x1="210" y1="170" x2="180" y2="150" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="210" y1="170" x2="250" y2="155" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="210" y1="215" x2="195" y2="265" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="210" y1="215" x2="225" y2="265" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="275" cy="150" r="22" fill="${c2}" opacity="0.9"/>
+      <line x1="275" y1="172" x2="265" y2="230" stroke="${c2}" stroke-width="5" stroke-linecap="round"/>
+      <line x1="275" y1="190" x2="245" y2="175" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="275" y1="190" x2="305" y2="180" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="265" y1="230" x2="250" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="265" y1="230" x2="280" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
+    `
+  };
+
+  const figure = figures[id] || figures['default'];
+
+  return `<svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg-${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${c1};stop-opacity:0.08"/>
+        <stop offset="100%" style="stop-color:${c2};stop-opacity:0.15"/>
+      </linearGradient>
+      <radialGradient id="glow-${id}" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" style="stop-color:${c1};stop-opacity:0.12"/>
+        <stop offset="100%" style="stop-color:${c1};stop-opacity:0"/>
+      </radialGradient>
+    </defs>
+    <rect width="480" height="300" fill="url(#bg-${id})"/>
+    <circle cx="240" cy="180" r="120" fill="url(#glow-${id})"/>
+    <!-- Mat circle -->
+    <ellipse cx="240" cy="275" rx="140" ry="15" fill="${c1}" opacity="0.06"/>
+    <!-- Figures -->
+    ${figure}
+    <!-- Technique name watermark -->
+    <text x="240" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="800" fill="${c1}" opacity="0.15" letter-spacing="6">${throwData.japanese.toUpperCase()}</text>
+  </svg>`;
+}
+
+// Render the current throw
+function render() {
+  const t = throws[currentIndex];
+
+  // Mark as seen
+  if (!seenThrows.includes(currentIndex)) {
+    seenThrows.push(currentIndex);
+    localStorage.setItem('judo-seen', JSON.stringify(seenThrows));
+  }
+
+  // Day counter
+  document.getElementById('dayCounter').textContent = `${currentIndex + 1} / ${throws.length}`;
+
+  // Image
+  document.getElementById('throwImage').innerHTML = generateThrowSVG(t) +
+    `<div class="throw-category-badge">${t.categoryLabel}</div>
+     <div class="throw-difficulty">${Array.from({length: 5}, (_, i) =>
+       `<div class="diff-dot ${i < t.difficulty ? 'active' : ''}"></div>`
+     ).join('')}</div>`;
+
+  // Text
+  document.getElementById('throwJapanese').textContent = t.japanese;
+  document.getElementById('throwName').textContent = t.name;
+  document.getElementById('throwTranslation').textContent = t.translation;
+  document.getElementById('throwDescription').textContent = t.description;
+
+  // Tips
+  document.getElementById('tipsContent').innerHTML = t.tips.map((tip, i) => `
+    <div class="tip-item">
+      <div class="tip-number">${i + 1}</div>
+      <div class="tip-text"><strong>${tip.title}.</strong> ${tip.text}</div>
+    </div>
+  `).join('');
+
+  // Combos
+  document.getElementById('combosContent').innerHTML = t.combos.map(combo => `
+    <div class="combo-item">
+      <div class="combo-label">${combo.label}</div>
+      <div class="combo-sequence">
+        ${combo.throws.map((name, i) => `
+          <span class="combo-throw ${i === combo.highlight ? 'highlight' : ''}">${name}</span>
+          ${i < combo.throws.length - 1 ? '<span class="combo-arrow">→</span>' : ''}
+        `).join('')}
+      </div>
+      <div class="combo-note">${combo.note}</div>
+    </div>
+  `).join('');
+
+  // Details
+  const d = t.details;
+  document.getElementById('detailsContent').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="detail-label">Direction</div>
+        <div class="detail-value">${d.direction}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Grip</div>
+        <div class="detail-value">${d.grip}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Stance</div>
+        <div class="detail-value">${d.stance}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Belt Level</div>
+        <div class="detail-value">${d.belt}</div>
+      </div>
+    </div>
+  `;
+
+  // Progress dots
+  document.getElementById('progressDots').innerHTML = throws.map((_, i) => `
+    <div class="progress-dot ${i === currentIndex ? 'current' : ''} ${seenThrows.includes(i) && i !== currentIndex ? 'seen' : ''}"
+         onclick="goToThrow(${i})" title="${throws[i].japanese}"></div>
+  `).join('');
+
+  const seenCount = seenThrows.length;
+  document.getElementById('progressLabel').textContent = `${seenCount} of ${throws.length} throws studied`;
+
+  // Browse grid
+  renderBrowseGrid();
+
+  // Animate
+  const hero = document.getElementById('heroCard');
+  hero.classList.remove('animate-in');
+  void hero.offsetWidth;
+  hero.classList.add('animate-in');
+}
+
+// Section toggle
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// Navigation
+function nextThrow() {
+  currentIndex = (currentIndex + 1) % throws.length;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevThrow() {
+  currentIndex = (currentIndex - 1 + throws.length) % throws.length;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToThrow(index) {
+  currentIndex = index;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Filter & Browse
+function renderFilters() {
+  const categories = ['All', ...new Set(throws.map(t => t.categoryLabel))];
+  document.getElementById('filterRow').innerHTML = categories.map(cat => `
+    <button class="filter-pill ${cat === activeFilter ? 'active' : ''}" onclick="setFilter('${cat}')">${cat}</button>
+  `).join('');
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  renderFilters();
+  renderBrowseGrid();
+}
+
+function renderBrowseGrid() {
+  const filtered = activeFilter === 'All' ? throws : throws.filter(t => t.categoryLabel === activeFilter);
+  document.getElementById('browseGrid').innerHTML = filtered.map((t, i) => {
+    const realIndex = throws.indexOf(t);
+    return `
+    <div class="browse-item ${realIndex === currentIndex ? 'active' : ''}" onclick="goToThrow(${realIndex})">
+      <div class="browse-item-name">${t.name}</div>
+      <div class="browse-item-jp">${t.japanese}</div>
+    </div>
+  `}).join('');
+}
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextThrow(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevThrow(); }
+});
+
+// Touch swipe
+let touchStartX = 0;
+let touchEndX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) > 60) {
+    if (diff > 0) nextThrow();
+    else prevThrow();
+  }
+}, { passive: true });
+
+// Init
+renderFilters();
+render();
+</script>
+</body>
+</html>
