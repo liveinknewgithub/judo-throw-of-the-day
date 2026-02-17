@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Judo Throw of the Day</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -29,7 +29,7 @@
   }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Outfit', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -168,17 +168,20 @@
   }
 
   .throw-name {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.8px;
-    line-height: 1.15;
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
     margin-bottom: 8px;
   }
 
   .throw-translation {
-    font-size: 14px;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 15px;
     color: var(--text-dim);
-    font-weight: 500;
+    font-weight: 400;
     margin-bottom: 16px;
   }
 
@@ -593,7 +596,7 @@
 
   /* Responsive */
   @media (min-width: 500px) {
-    .throw-name { font-size: 32px; }
+    .throw-name { font-size: 38px; }
     .main { padding: 0 24px 100px; }
   }
 
@@ -630,17 +633,17 @@
 
   <!-- Nav -->
   <div class="nav-row">
-    <button class="nav-btn" id="prevBtn" onclick="prevThrow()">
+    <button class="nav-btn" id="prevBtn">
       <span class="arrow">←</span> Previous
     </button>
-    <button class="nav-btn primary" id="nextBtn" onclick="nextThrow()">
+    <button class="nav-btn primary" id="nextBtn">
       Next <span class="arrow">→</span>
     </button>
   </div>
 
   <!-- Entry Tips -->
   <div class="section-card open" id="tipsSection">
-    <div class="section-header" onclick="toggleSection('tipsSection')">
+    <div class="section-header">
       <div class="section-header-left">
         <div class="section-icon tips">💡</div>
         <div>
@@ -657,7 +660,7 @@
 
   <!-- Combinations -->
   <div class="section-card" id="combosSection">
-    <div class="section-header" onclick="toggleSection('combosSection')">
+    <div class="section-header">
       <div class="section-header-left">
         <div class="section-icon combos">🔗</div>
         <div>
@@ -674,7 +677,7 @@
 
   <!-- Details -->
   <div class="section-card" id="detailsSection">
-    <div class="section-header" onclick="toggleSection('detailsSection')">
+    <div class="section-header">
       <div class="section-header-left">
         <div class="section-icon details">📋</div>
         <div>
@@ -1183,66 +1186,77 @@ let currentIndex = getTodayIndex();
 let seenThrows = JSON.parse(localStorage.getItem('judo-seen') || '[]');
 let activeFilter = 'All';
 
-// Generate throw illustration SVG
+// Deterministic seed from string
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i) | 0;
+  return h;
+}
+function seeded(hash, n) {
+  return Math.abs((hash * (n + 1) * 9301 + 49297) % 233280) / 233280;
+}
+
+// Generate abstract kinetic SVG — unique per throw
 function generateThrowSVG(throwData) {
   const c1 = throwData.image.color1;
   const c2 = throwData.image.color2;
   const id = throwData.id;
+  const h = hashStr(id);
+  const s = (n) => seeded(h, n);
 
-  // Each throw gets a unique stylized illustration using geometric shapes
-  const figures = {
-    'osotogari': `
-      <circle cx="200" cy="120" r="22" fill="${c1}" opacity="0.9"/>
-      <line x1="200" y1="142" x2="200" y2="210" stroke="${c1}" stroke-width="5" stroke-linecap="round"/>
-      <line x1="200" y1="165" x2="170" y2="145" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="200" y1="165" x2="240" y2="155" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="200" y1="210" x2="185" y2="260" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="200" y1="210" x2="250" y2="230" stroke="${c1}" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="280" cy="140" r="22" fill="${c2}" opacity="0.9"/>
-      <line x1="280" y1="162" x2="270" y2="230" stroke="${c2}" stroke-width="5" stroke-linecap="round"/>
-      <line x1="280" y1="185" x2="250" y2="165" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="280" y1="185" x2="310" y2="170" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="270" y1="230" x2="255" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="270" y1="230" x2="290" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <path d="M 248 228 Q 260 210 250 190" stroke="${c1}" stroke-width="3" fill="none" stroke-dasharray="6 4" opacity="0.6"/>
-    `,
-    'default': `
-      <circle cx="210" cy="125" r="22" fill="${c1}" opacity="0.9"/>
-      <line x1="210" y1="147" x2="210" y2="215" stroke="${c1}" stroke-width="5" stroke-linecap="round"/>
-      <line x1="210" y1="170" x2="180" y2="150" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="210" y1="170" x2="250" y2="155" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="210" y1="215" x2="195" y2="265" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="210" y1="215" x2="225" y2="265" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="275" cy="150" r="22" fill="${c2}" opacity="0.9"/>
-      <line x1="275" y1="172" x2="265" y2="230" stroke="${c2}" stroke-width="5" stroke-linecap="round"/>
-      <line x1="275" y1="190" x2="245" y2="175" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="275" y1="190" x2="305" y2="180" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="265" y1="230" x2="250" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-      <line x1="265" y1="230" x2="280" y2="270" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-    `
-  };
+  // Seeded layout parameters
+  const cx = 180 + s(0) * 120;
+  const cy = 110 + s(1) * 80;
+  const r1 = 70 + s(2) * 50;
+  const r2 = 35 + s(3) * 35;
+  const r3 = 90 + s(4) * 50;
 
-  const figure = figures[id] || figures['default'];
+  // Arc control points
+  const ax1 = 80 + s(5) * 120, ay1 = 60 + s(6) * 80;
+  const ax2 = 280 + s(7) * 120, ay2 = 180 + s(8) * 60;
+  const qx = 180 + s(9) * 120, qy = 60 + s(10) * 100;
+
+  // Secondary arc
+  const bx1 = 100 + s(11) * 100, by1 = 140 + s(12) * 60;
+  const bx2 = 300 + s(13) * 80, by2 = 100 + s(14) * 80;
+
+  // Scattered dots (motion trail)
+  const dots = Array.from({length: 4}, (_, i) => ({
+    x: ax2 + (i + 1) * (8 + s(15 + i) * 10) * (s(19) > 0.5 ? 1 : -1),
+    y: ay2 + (i + 1) * (4 + s(20 + i) * 8),
+    r: 4 - i * 0.8,
+    o: 0.4 - i * 0.09
+  }));
+
+  const dashArray = s(25) > 0.5 ? 'stroke-dasharray="8 12"' : '';
 
   return `<svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="bg-${id}" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:${c1};stop-opacity:0.08"/>
-        <stop offset="100%" style="stop-color:${c2};stop-opacity:0.15"/>
+        <stop offset="0%" stop-color="${c1}" stop-opacity="0.05"/>
+        <stop offset="100%" stop-color="${c2}" stop-opacity="0.1"/>
       </linearGradient>
-      <radialGradient id="glow-${id}" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" style="stop-color:${c1};stop-opacity:0.12"/>
-        <stop offset="100%" style="stop-color:${c1};stop-opacity:0"/>
+      <radialGradient id="glow-${id}" cx="${cx / 480}" cy="${cy / 300}" r="0.4">
+        <stop offset="0%" stop-color="${c1}" stop-opacity="0.1"/>
+        <stop offset="100%" stop-color="${c1}" stop-opacity="0"/>
       </radialGradient>
     </defs>
     <rect width="480" height="300" fill="url(#bg-${id})"/>
-    <circle cx="240" cy="180" r="120" fill="url(#glow-${id})"/>
-    <!-- Mat circle -->
-    <ellipse cx="240" cy="275" rx="140" ry="15" fill="${c1}" opacity="0.06"/>
-    <!-- Figures -->
-    ${figure}
-    <!-- Technique name watermark -->
-    <text x="240" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="800" fill="${c1}" opacity="0.15" letter-spacing="6">${throwData.japanese.toUpperCase()}</text>
+    <rect width="480" height="300" fill="url(#glow-${id})"/>
+    <!-- Large orbit -->
+    <circle cx="${240 + s(26) * 60 - 30}" cy="${160 + s(27) * 40 - 20}" r="${r3}" fill="none" stroke="${c2}" stroke-width="1.5" opacity="0.07" ${dashArray}/>
+    <!-- Primary arc — sweep of the throw -->
+    <path d="M ${ax1} ${ay1} Q ${qx} ${qy} ${ax2} ${ay2}" stroke="${c1}" stroke-width="2.5" fill="none" opacity="0.22" stroke-linecap="round"/>
+    <!-- Secondary arc -->
+    <path d="M ${bx1} ${by1} Q ${cx} ${cy + 40} ${bx2} ${by2}" stroke="${c2}" stroke-width="1.5" fill="none" opacity="0.14" stroke-linecap="round"/>
+    <!-- Mass circles -->
+    <circle cx="${cx}" cy="${cy}" r="${r1}" fill="none" stroke="${c1}" stroke-width="1.5" opacity="0.12"/>
+    <circle cx="${cx + 40 * (s(28) - 0.3)}" cy="${cy + 30}" r="${r2}" fill="${c1}" opacity="0.06"/>
+    <circle cx="${cx - 30}" cy="${cy - 20}" r="${r2 * 0.6}" fill="${c2}" opacity="0.07"/>
+    <!-- Motion trail dots -->
+    ${dots.map(d => `<circle cx="${d.x}" cy="${d.y}" r="${d.r}" fill="${c1}" opacity="${d.o}"/>`).join('\n    ')}
+    <!-- Technique name -->
+    <text x="240" y="34" text-anchor="middle" font-family="Outfit, sans-serif" font-size="12" font-weight="700" fill="${c1}" opacity="0.1" letter-spacing="6">${throwData.japanese.toUpperCase()}</text>
   </svg>`;
 }
 
@@ -1320,7 +1334,7 @@ function render() {
   // Progress dots
   document.getElementById('progressDots').innerHTML = throws.map((_, i) => `
     <div class="progress-dot ${i === currentIndex ? 'current' : ''} ${seenThrows.includes(i) && i !== currentIndex ? 'seen' : ''}"
-         onclick="goToThrow(${i})" title="${throws[i].japanese}"></div>
+         data-index="${i}" title="${throws[i].japanese}"></div>
   `).join('');
 
   const seenCount = seenThrows.length;
@@ -1336,20 +1350,9 @@ function render() {
   hero.classList.add('animate-in');
 }
 
-// Section toggle
-function toggleSection(id) {
-  document.getElementById(id).classList.toggle('open');
-}
-
 // Navigation
-function nextThrow() {
-  currentIndex = (currentIndex + 1) % throws.length;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function prevThrow() {
-  currentIndex = (currentIndex - 1 + throws.length) % throws.length;
+function navigate(delta) {
+  currentIndex = (currentIndex + delta + throws.length) % throws.length;
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1364,14 +1367,8 @@ function goToThrow(index) {
 function renderFilters() {
   const categories = ['All', ...new Set(throws.map(t => t.categoryLabel))];
   document.getElementById('filterRow').innerHTML = categories.map(cat => `
-    <button class="filter-pill ${cat === activeFilter ? 'active' : ''}" onclick="setFilter('${cat}')">${cat}</button>
+    <button class="filter-pill ${cat === activeFilter ? 'active' : ''}" data-filter="${cat}">${cat}</button>
   `).join('');
-}
-
-function setFilter(cat) {
-  activeFilter = cat;
-  renderFilters();
-  renderBrowseGrid();
 }
 
 function renderBrowseGrid() {
@@ -1379,30 +1376,58 @@ function renderBrowseGrid() {
   document.getElementById('browseGrid').innerHTML = filtered.map((t, i) => {
     const realIndex = throws.indexOf(t);
     return `
-    <div class="browse-item ${realIndex === currentIndex ? 'active' : ''}" onclick="goToThrow(${realIndex})">
+    <div class="browse-item ${realIndex === currentIndex ? 'active' : ''}" data-index="${realIndex}">
       <div class="browse-item-name">${t.name}</div>
       <div class="browse-item-jp">${t.japanese}</div>
     </div>
   `}).join('');
 }
 
+// --- Event listeners (no inline handlers) ---
+
+// Section accordion toggles
+document.querySelectorAll('.section-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.closest('.section-card').classList.toggle('open');
+  });
+});
+
+// Nav buttons
+document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
+document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
+
+// Delegated click handlers for dynamic content
+document.getElementById('progressDots').addEventListener('click', (e) => {
+  const dot = e.target.closest('[data-index]');
+  if (dot) goToThrow(Number(dot.dataset.index));
+});
+
+document.getElementById('browseGrid').addEventListener('click', (e) => {
+  const item = e.target.closest('[data-index]');
+  if (item) goToThrow(Number(item.dataset.index));
+});
+
+document.getElementById('filterRow').addEventListener('click', (e) => {
+  const pill = e.target.closest('[data-filter]');
+  if (pill) {
+    activeFilter = pill.dataset.filter;
+    renderFilters();
+    renderBrowseGrid();
+  }
+});
+
 // Keyboard nav
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextThrow(); }
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevThrow(); }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); navigate(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
 });
 
 // Touch swipe
 let touchStartX = 0;
-let touchEndX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
 document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  const diff = touchStartX - touchEndX;
-  if (Math.abs(diff) > 60) {
-    if (diff > 0) nextThrow();
-    else prevThrow();
-  }
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 60) navigate(diff > 0 ? 1 : -1);
 }, { passive: true });
 
 // Init
