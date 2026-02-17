@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Learn a new judo throw every day — technique breakdowns, entry tips, and combination chains.">
+    <meta name="theme-color" content="#0b0b10">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M20 3C10.6 3 3 10.6 3 20s7.6 17 17 17 17-7.6 17-17' fill='none' stroke='%23c9a854' stroke-width='3' stroke-linecap='round'/></svg>">
     <title>Throw of the Day — Judo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +24,7 @@
             --cream: #ede8df;
             --cream-dim: #7a7670;
             --teal: #3a9a8a;
-            --section-line: rgba(201, 168, 84, 0.15);
+            --section-line: rgba(201, 168, 84, 0.2);
         }
 
         html {
@@ -36,6 +39,8 @@
             min-height: 100dvh;
             overflow-x: hidden;
             position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Grain texture overlay */
@@ -45,7 +50,7 @@
             inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
             pointer-events: none;
-            z-index: 9999;
+            z-index: 100;
             opacity: 0.5;
         }
 
@@ -88,7 +93,6 @@
         }
 
         .header-title {
-            font-family: 'Outfit', sans-serif;
             font-weight: 600;
             font-size: 0.7rem;
             letter-spacing: 0.2em;
@@ -98,7 +102,6 @@
         }
 
         .day-counter {
-            font-family: 'Outfit', sans-serif;
             font-weight: 400;
             font-size: 0.72rem;
             color: var(--gold);
@@ -118,6 +121,7 @@
             max-width: 520px;
             margin: 0 auto;
             transition: opacity 0.35s ease, transform 0.35s ease;
+            will-change: transform, opacity;
         }
 
         .throw-card.exit-left {
@@ -153,6 +157,18 @@
             background: var(--gold-glow);
             filter: blur(40px);
             pointer-events: none;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .illustration-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+            opacity: 0.25;
         }
 
         .throw-svg {
@@ -177,6 +193,7 @@
             color: var(--cream);
             letter-spacing: 0.01em;
             margin-bottom: 0.15rem;
+            text-shadow: 0 0 30px rgba(201, 168, 84, 0.12);
         }
 
         .throw-kanji {
@@ -198,7 +215,6 @@
 
         .category-pill {
             display: inline-block;
-            font-family: 'Outfit', sans-serif;
             font-weight: 500;
             font-size: 0.65rem;
             letter-spacing: 0.15em;
@@ -209,10 +225,10 @@
             background: var(--card);
         }
 
-        .category-pill[data-cat="te"] { color: #e8a44a; border-color: rgba(232,164,74,0.25); }
-        .category-pill[data-cat="koshi"] { color: #5ab88a; border-color: rgba(90,184,138,0.25); }
-        .category-pill[data-cat="ashi"] { color: #5a9ab8; border-color: rgba(90,154,184,0.25); }
-        .category-pill[data-cat="sutemi"] { color: #b85a8a; border-color: rgba(184,90,138,0.25); }
+        .category-pill[data-cat="te"] { color: #e8a44a; border-color: rgba(232,164,74,0.25); background: rgba(232,164,74,0.06); }
+        .category-pill[data-cat="koshi"] { color: #5ab88a; border-color: rgba(90,184,138,0.25); background: rgba(90,184,138,0.06); }
+        .category-pill[data-cat="ashi"] { color: #5a9ab8; border-color: rgba(90,154,184,0.25); background: rgba(90,154,184,0.06); }
+        .category-pill[data-cat="sutemi"] { color: #b85a8a; border-color: rgba(184,90,138,0.25); background: rgba(184,90,138,0.06); }
 
         /* ---- SECTIONS ---- */
         .section {
@@ -223,7 +239,6 @@
         }
 
         .section-label {
-            font-family: 'Outfit', sans-serif;
             font-weight: 500;
             font-size: 0.6rem;
             letter-spacing: 0.25em;
@@ -290,11 +305,13 @@
             font-size: 0.85rem;
             font-weight: 400;
             color: var(--cream);
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
         }
 
         .combo-item:hover {
             border-color: var(--gold-dim);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
         }
 
         .combo-arrow {
@@ -365,7 +382,6 @@
         }
 
         .today-btn {
-            font-family: 'Outfit', sans-serif;
             font-weight: 500;
             font-size: 0.65rem;
             letter-spacing: 0.2em;
@@ -394,33 +410,64 @@
             pointer-events: none;
         }
 
-        /* ---- DOTS ---- */
-        .dots {
+        /* ---- PROGRESS BAR ---- */
+        .progress-wrap {
+            flex: 1;
+            max-width: 120px;
             display: flex;
-            gap: 5px;
+            flex-direction: column;
             align-items: center;
+            gap: 4px;
         }
 
-        .dot {
+        .progress-track {
+            width: 100%;
+            height: 3px;
+            background: var(--card-border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: width 0.35s ease;
+        }
+
+        /* ---- FOCUS STYLES ---- */
+        .nav-btn:focus-visible,
+        .today-btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        /* ---- TODAY PULSE ---- */
+        .today-btn:not(.is-today)::before {
+            content: '';
+            display: inline-block;
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: var(--cream-dim);
-            opacity: 0.2;
-            transition: all 0.3s;
+            background: var(--gold);
+            margin-right: 0.5em;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        .dot.active {
-            background: var(--gold);
-            opacity: 0.9;
-            width: 7px;
-            height: 7px;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         /* ---- ANIMATIONS ---- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.08); }
         }
 
         .anim-in {
@@ -432,6 +479,16 @@
         .stagger-3 { animation-delay: 0.2s; opacity: 0; }
         .stagger-4 { animation-delay: 0.28s; opacity: 0; }
         .stagger-5 { animation-delay: 0.36s; opacity: 0; }
+
+        /* ---- ENTRANCE ---- */
+        .header, .nav-bar {
+            opacity: 0;
+            animation: fadeUp 0.5s ease forwards;
+        }
+        .nav-bar { animation-delay: 0.15s; }
+
+        /* ---- SPACER ---- */
+        .bottom-spacer { height: 5rem; }
 
         /* ---- RESPONSIVE ---- */
         @media (min-width: 640px) {
@@ -470,7 +527,7 @@
         </div>
         <div class="section" id="tipsSection"></div>
         <div class="section" id="combosSection"></div>
-        <div style="height: 5rem;"></div>
+        <div class="bottom-spacer"></div>
     </main>
 
     <!-- Navigation -->
@@ -478,7 +535,9 @@
         <button class="nav-btn" id="prevBtn" aria-label="Previous throw">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <div class="dots" id="dots"></div>
+        <div class="progress-wrap" id="progressWrap">
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
         <button class="today-btn" id="todayBtn">Today</button>
         <button class="nav-btn" id="nextBtn" aria-label="Next throw">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
@@ -964,85 +1023,93 @@ function throwSvg(t) {
 }
 
 // =========================================================
-// RENDERING
+// DOM REFS & STATE
 // =========================================================
 
-const card = document.getElementById('throwCard');
-const tipsEl = document.getElementById('tipsSection');
-const combosEl = document.getElementById('combosSection');
-const dayCounter = document.getElementById('dayCounter');
-const todayBtn = document.getElementById('todayBtn');
-const dotsEl = document.getElementById('dots');
+const el = {
+    card: document.getElementById('throwCard'),
+    tips: document.getElementById('tipsSection'),
+    combos: document.getElementById('combosSection'),
+    counter: document.getElementById('dayCounter'),
+    today: document.getElementById('todayBtn'),
+    progress: document.getElementById('progressFill'),
+    prev: document.getElementById('prevBtn'),
+    next: document.getElementById('nextBtn'),
+};
 
 const total = throws.length;
 const todayIndex = Math.floor(Date.now() / 86400000) % total;
 let current = todayIndex;
 
+// =========================================================
+// TEMPLATES
+// =========================================================
+
+function cardHtml(t) {
+    return `
+        <div class="illustration-wrap anim-in stagger-1">${throwSvg(t)}</div>
+        <div class="throw-info">
+            <div class="throw-name anim-in stagger-2">${t.name}</div>
+            <div class="throw-kanji anim-in stagger-2">${t.kanji}</div>
+            <div class="throw-english anim-in stagger-3">${t.english}</div>
+            <span class="category-pill anim-in stagger-3" data-cat="${t.cat}">${t.catName}</span>
+        </div>`;
+}
+
+function tipsHtml(t) {
+    return `
+        <div class="section-label anim-in stagger-4">Entry Tips</div>
+        <ul class="tips-list anim-in stagger-4">
+            ${t.tips.map((tip, i) => `
+                <li class="tip-item">
+                    <span class="tip-num">${i + 1}</span>
+                    <span>${tip}</span>
+                </li>`).join('')}
+        </ul>`;
+}
+
+function combosHtml(t) {
+    return `
+        <div class="section-label anim-in stagger-5">Combinations</div>
+        <div class="combo-list anim-in stagger-5">
+            ${t.combos.map(c => `
+                <div class="combo-item">
+                    <span class="combo-throw">${c.a}</span>
+                    <span class="combo-arrow">&#10230;</span>
+                    <span class="combo-throw">${c.b}</span>
+                    <span class="combo-note">${c.note}</span>
+                </div>`).join('')}
+        </div>`;
+}
+
+// =========================================================
+// RENDERING
+// =========================================================
+
 function render(index, direction) {
     const t = throws[index];
     current = index;
 
-    // Day counter
-    dayCounter.textContent = `${index + 1} / ${total}`;
+    el.counter.textContent = `${index + 1} / ${total}`;
+    el.today.classList.toggle('is-today', index === todayIndex);
+    el.progress.style.width = `${((index + 1) / total) * 100}%`;
 
-    // Today button state
-    todayBtn.classList.toggle('is-today', index === todayIndex);
-
-    // Dots
-    dotsEl.innerHTML = throws.map((_, i) =>
-        `<span class="dot${i === index ? ' active' : ''}"></span>`
-    ).join('');
-
-    // Animate out
     const exitClass = direction === 'next' ? 'exit-left' : direction === 'prev' ? 'exit-right' : 'enter';
-    card.classList.add(exitClass);
+    el.card.classList.add(exitClass);
 
-    const delay = direction ? 200 : 0;
-
-    setTimeout(() => {
-        // Card content
-        card.innerHTML = `
-            <div class="illustration-wrap anim-in stagger-1">${throwSvg(t)}</div>
-            <div class="throw-info">
-                <div class="throw-name anim-in stagger-2">${t.name}</div>
-                <div class="throw-kanji anim-in stagger-2">${t.kanji}</div>
-                <div class="throw-english anim-in stagger-3">${t.english}</div>
-                <span class="category-pill anim-in stagger-3" data-cat="${t.cat}">${t.catName}</span>
-            </div>
-        `;
-
-        // Tips
-        tipsEl.innerHTML = `
-            <div class="section-label anim-in stagger-4">Entry Tips</div>
-            <ul class="tips-list anim-in stagger-4">
-                ${t.tips.map((tip, i) => `
-                    <li class="tip-item">
-                        <span class="tip-num">${i + 1}</span>
-                        <span>${tip}</span>
-                    </li>
-                `).join('')}
-            </ul>
-        `;
-
-        // Combos
-        combosEl.innerHTML = `
-            <div class="section-label anim-in stagger-5">Combinations</div>
-            <div class="combo-list anim-in stagger-5">
-                ${t.combos.map(c => `
-                    <div class="combo-item">
-                        <span class="combo-throw">${c.a}</span>
-                        <span class="combo-arrow">&#10230;</span>
-                        <span class="combo-throw">${c.b}</span>
-                        <span class="combo-note">${c.note}</span>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-
-        // Remove exit class, trigger enter
-        card.classList.remove(exitClass);
+    const update = () => {
+        el.card.innerHTML = cardHtml(t);
+        el.tips.innerHTML = tipsHtml(t);
+        el.combos.innerHTML = combosHtml(t);
+        el.card.classList.remove(exitClass);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, delay);
+    };
+
+    if (direction) {
+        setTimeout(() => requestAnimationFrame(update), 200);
+    } else {
+        requestAnimationFrame(update);
+    }
 }
 
 // =========================================================
@@ -1054,26 +1121,23 @@ function go(dir) {
     render(next, dir);
 }
 
-document.getElementById('prevBtn').addEventListener('click', () => go('prev'));
-document.getElementById('nextBtn').addEventListener('click', () => go('next'));
-todayBtn.addEventListener('click', () => { if (current !== todayIndex) render(todayIndex, null); });
+el.prev.addEventListener('click', () => go('prev'));
+el.next.addEventListener('click', () => go('next'));
+el.today.addEventListener('click', () => { if (current !== todayIndex) render(todayIndex, null); });
 
-// Keyboard
 document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go('next');
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go('prev');
 });
 
-// Touch swipe
-let touchStartX = 0;
-let touchStartY = 0;
+const swipe = { x: 0, y: 0 };
 document.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+    swipe.x = e.touches[0].clientX;
+    swipe.y = e.touches[0].clientY;
 }, { passive: true });
 document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
+    const dx = e.changedTouches[0].clientX - swipe.x;
+    const dy = e.changedTouches[0].clientY - swipe.y;
     if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         go(dx < 0 ? 'next' : 'prev');
     }
